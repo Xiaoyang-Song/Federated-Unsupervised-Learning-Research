@@ -1,0 +1,24 @@
+---
+title: "PCA vs. IRT"
+author: "Xiaoyang Song"
+date: "7/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## PCA (Principle component analysis)
+Basic features:
+1. Unsupervised learning task - extract several principle components that capture most variance
+2. Training data: a bunch of data points (x,y)
+3. Given response pattern and scores for each dimension, find $k$ principle components, which are just linear combination of $\textbf{x}$.
+4. The final results are $k$ elements, in another word, a matrix of loadings.
+
+## Graded IRT model
+Basic features:
+1. Unsupervised learning task - assuming existence of several latent variables
+2. Data: only response pattern of each item for each respondent
+3. Given the response pattern and the graded IRT model, find the loadings for each latent variable.
+4. The final results are a matrix of parameters.;
