@@ -51,9 +51,10 @@ for (i in 1:num_mc_iter) {
     values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
+    # TODO: add constraint to parameter matrix.
     model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
+    # Extract model coefficients.
   }
-  # Extract model coefficients.
 }
