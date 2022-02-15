@@ -18,6 +18,12 @@ extract_model_configuration <- function(N, J, p, model, mc) {
       num_mc_iter = mc
   ))
 }
+
+compute_average_estimator <- function(local_est, ground_truth) {
+  avg_est <- mean(local_est)
+  avg_fnorm <- norm((avg_est - ground_truth), "F")
+  return(list(est = avg_est, err = avg_fnorm))
+}
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
@@ -33,7 +39,7 @@ d <- matrix(c(0, 1, 2, 3, 4, 0, -1, -2, -3, -4), 10, 1)
 # Global parameters
 N = 1000
 J = 10
-m = 10
+m = 5
 p = 1
 n <- N / m # local sample size
 # REBOOT algorithm
@@ -44,12 +50,11 @@ for (i in 1:num_mc_iter) {
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", 10))
 
-
   for (l in 1:m) {
     # Split data into m local machine.
     local_data <- data[(1 + (l - 1) * n):(n * l),]
     # Fit the mirt model
-    values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
+    values <- mirt(local_data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
     # TODO: add constraint to parameter matrix.
@@ -59,4 +64,9 @@ for (i in 1:num_mc_iter) {
     # Extract model coefficients.
     local_est[[l]] <- coef(model, simplify = TRUE)[[1]][, 2]
   }
+  avg_est[[i]] <- compute_average_estimator(local_est, d)$est
+  avg[[i]] <- compute_average_estimator(local_est, d)$err
+  print(avg_est)
+  # Generate Bootstrap samples.
+  reboot_data <- list()
 }
