@@ -1,6 +1,7 @@
 library(mirt)
 library(stats4)
 library(lattice)
+library(Dict)
 
 sin_theta <- function(A1, A2) {
   v1 <- svd(A1)$u
@@ -8,13 +9,21 @@ sin_theta <- function(A1, A2) {
   return(norm((v1 %*% t(v1) - v2 %*% t(v2)), "F"))
 }
 
-extract_model_configuration <- function() {
-  return(list(1, 2, 3))
+extract_model_configuration <- function(N, J, p, model, mc) {
+  return(Dict$new(
+      num_test_taker = N,
+      num_items = J,
+      num_latent_fac = p,
+      model = model,
+      num_mc_iter = mc
+  ))
 }
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
 num_mc_iter <- 100
+
+config_dict <- extract_model_configuration(100, 10, "Rasch")
 
 print("Rasch Model Implementation using MIRT package")
 # Ground Truth: small-scale experiments
