@@ -38,3 +38,10 @@ model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
 
+# Global parameters
+N = 1000
+J = 10
+p = 1
+# REBOOT algorithm
+reboot_fnorm <- avg_fnorm <- matrix(0, N, J) # Store F-norm 
+reboot_est <- avg_est <- matrix(0, N, J) # Store estimated parameters
