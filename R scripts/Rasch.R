@@ -7,6 +7,10 @@ sin_theta <- function(A1, A2) {
   v2 <- svd(A2)$u
   return(norm((v1 %*% t(v1) - v2 %*% t(v2)), "F"))
 }
+
+extract_model_configuration <- function() {
+  return(list(1, 2, 3))
+}
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
