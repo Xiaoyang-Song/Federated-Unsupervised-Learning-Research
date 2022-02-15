@@ -20,7 +20,7 @@ extract_model_configuration <- function(N, J, p, model, mc) {
 }
 
 compute_average_estimator <- function(local_est, ground_truth) {
-  avg_est <- mean(local_est)
+  avg_est <- apply(simplify2array(local_est), 1:2, mean)
   avg_fnorm <- norm((avg_est - ground_truth), "F")
   return(list(est = avg_est, err = avg_fnorm))
 }
@@ -50,7 +50,7 @@ for (i in 1:num_mc_iter) {
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", 10))
 
-  for (l in 1:m) {
+  for (l in 1:2) {
     # Split data into m local machine.
     local_data <- data[(1 + (l - 1) * n):(n * l),]
     # Fit the mirt model
@@ -62,10 +62,11 @@ for (i in 1:num_mc_iter) {
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
     # Extract model coefficients.
-    local_est[[l]] <- coef(model, simplify = TRUE)[[1]][, 2]
+    local_est[[l]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2])
+    local_est
   }
   avg_est[[i]] <- compute_average_estimator(local_est, d)$est
-  avg[[i]] <- compute_average_estimator(local_est, d)$err
+  avg_fnorm[[i]] <- compute_average_estimator(local_est, d)$err
   print(avg_est)
   # Generate Bootstrap samples.
   reboot_data <- list()
