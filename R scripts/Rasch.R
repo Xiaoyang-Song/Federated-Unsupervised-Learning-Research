@@ -2,7 +2,7 @@ library(mirt)
 library(stats4)
 library(lattice)
 
-sinTheta <- function(A1, A2) {
+sin_theta <- function(A1, A2) {
   V1 <- svd(A1)$u
   V2 <- svd(A2)$u
   return(norm((V1 %*% t(V1) - V2 %*% t(V2)), "F"))
