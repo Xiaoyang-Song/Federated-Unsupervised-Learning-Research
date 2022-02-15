@@ -2,6 +2,11 @@ library(mirt)
 library(stats4)
 library(lattice)
 
+sinTheta <- function(A1, A2) {
+  V1 <- svd(A1)$u
+  V2 <- svd(A2)$u
+  return(norm((V1 %*% t(V1) - V2 %*% t(V2)), "F"))
+}
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
@@ -18,3 +23,4 @@ values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
 model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
+
