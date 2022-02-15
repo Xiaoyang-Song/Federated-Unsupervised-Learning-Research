@@ -3,9 +3,9 @@ library(stats4)
 library(lattice)
 
 sin_theta <- function(A1, A2) {
-  V1 <- svd(A1)$u
-  V2 <- svd(A2)$u
-  return(norm((V1 %*% t(V1) - V2 %*% t(V2)), "F"))
+  v1 <- svd(A1)$u
+  v2 <- svd(A2)$u
+  return(norm((v1 %*% t(v1) - v2 %*% t(v2)), "F"))
 }
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
