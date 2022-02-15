@@ -2,7 +2,6 @@ library(mirt)
 library(stats4)
 library(lattice)
 
-
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
