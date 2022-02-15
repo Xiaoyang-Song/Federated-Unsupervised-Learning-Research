@@ -10,6 +10,7 @@ sin_theta <- function(A1, A2) {
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
+num_mc_iter <- 100
 
 print("Rasch Model Implementation using MIRT package")
 # Ground Truth: small-scale experiments
