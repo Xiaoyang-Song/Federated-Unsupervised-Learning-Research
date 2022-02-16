@@ -57,18 +57,18 @@ compute_average_estimator <- function(local_est_all, ground_truth) {
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
 num_mc_iter <- 3
-
-config_dict <- extract_model_configuration(100, 10, 1, "Rasch", 3)
+# TODO: automate the code by implementing a processing pipeline
+# config_dict <- extract_model_configuration(100, 10, 1, "Rasch", 3)
 
 print("Rasch Model Implementation using MIRT package")
 # Ground Truth: small-scale experiments
-a <- matrix(1, 10, 1)
+a <- matrix(1, 5, 1)
 a
-d <- matrix(c(0, 1, 2, 3, 4, 0, -1, -2, -3, -4), 10, 1)
+d <- matrix(c(0, 1, 2, 3, 4), 5, 1)
 d
 # Global parameters
 N = 1000
-J = 10
+J = 5
 m = 8
 p = 1
 R = 10 # Amplification ratio
@@ -79,7 +79,7 @@ reboot_est <- avg_est <- local_est <- cmirt_est <- list() # nolint
 for (i in 1:num_mc_iter) {
   # Generate data
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
-  data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", 10))
+  data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", J))
   # Compute centralized MIRT estimator.
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
