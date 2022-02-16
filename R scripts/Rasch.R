@@ -87,7 +87,7 @@ for (i in 1:num_mc_iter) {
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
   reboot_est[[i]] <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][2])) #nolint
-  reboot_fnorm[[i]] <- norm((reboo_est[[i]] - d), "F")
+  reboot_fnorm[[i]] <- norm((reboot_est[[i]] - d), "F")
 }
 print("Local Estimator:")
 print(mean(local_fnorm))
