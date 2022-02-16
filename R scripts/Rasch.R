@@ -56,7 +56,7 @@ compute_average_estimator <- function(local_est_all, ground_truth) {
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
-num_mc_iter <- 3
+num_mc_iter <- 2
 # TODO: automate the code by implementing a processing pipeline
 # config_dict <- extract_model_configuration(100, 10, 1, "Rasch", 3)
 
@@ -69,7 +69,7 @@ d
 # Global parameters
 N = 1000
 J = 5
-m = 8
+m = 20
 p = 1
 R = 10 # Amplification ratio
 n <- N / m # local sample size
