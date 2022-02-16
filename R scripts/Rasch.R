@@ -20,7 +20,7 @@ extract_model_configuration <- function(N, J, p, model, mc) {
 }
 
 compute_average_estimator <- function(local_est_all, ground_truth) {
-  avg_est <- apply(local_est_all, 1:2, mean)
+  avg_est <- apply(simplify2array(local_est_all), 1:2, mean)
   avg_fnorm <- norm((avg_est - ground_truth), "F")
   return(list(est = avg_est, err = avg_fnorm))
 }
