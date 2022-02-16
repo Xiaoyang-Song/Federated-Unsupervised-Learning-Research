@@ -34,8 +34,9 @@ config_dict <- extract_model_configuration(100, 10, 1, "Rasch", 3)
 print("Rasch Model Implementation using MIRT package")
 # Ground Truth: small-scale experiments
 a <- matrix(1, 10, 1)
+a
 d <- matrix(c(0, 1, 2, 3, 4, 0, -1, -2, -3, -4), 10, 1)
-
+d
 # Global parameters
 N = 1000
 J = 10
@@ -50,6 +51,7 @@ for (i in 1:num_mc_iter) {
   # Generate data
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", 10))
+  data
   # Compute centralized MIRT estimator.
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
