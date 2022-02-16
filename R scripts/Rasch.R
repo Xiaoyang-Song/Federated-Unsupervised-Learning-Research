@@ -27,7 +27,7 @@ compute_average_estimator <- function(local_est_all, ground_truth) {
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
-num_mc_iter <- 100
+num_mc_iter <- 3
 
 config_dict <- extract_model_configuration(100, 10, 1, "Rasch", 3)
 
@@ -44,12 +44,23 @@ p = 1
 R = 10 # Amplification ratio
 n <- N / m # local sample size
 # REBOOT algorithm
-reboot_fnorm <- avg_fnorm <- local_fnorm <- rep(0, num_mc_iter) # Store F-norm 
-reboot_est <- avg_est <- local_est <- list() # Store est. parameters
+reboot_fnorm <- avg_fnorm <- local_fnorm <- cmirt_fnorm <- rep(0, num_mc_iter) # nolint
+reboot_est <- avg_est <- local_est <- cmirt_est <- list() # nolint
 for (i in 1:num_mc_iter) {
   # Generate data
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", 10))
+  # Compute centralized MIRT estimator.
+  values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
+        itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
+        gain = c(1, 1)), pars = "values")
+  # TODO: add constraint to parameter matrix.
+  model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
+        TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
+        gain = c(1, 1)), pars = values)
+  cmirt_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
+  cmirt_fnorm[[i]] <- norm((cmirt[[i]] - d), "F")
+  # Start distributed setting.
   local_est_all <- list()
   for (l in 1:2) {
     # Split data into m local machine.
@@ -86,7 +97,7 @@ for (i in 1:num_mc_iter) {
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
-  reboot_est[[i]] <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][2])) #nolint
+  reboot_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
   reboot_fnorm[[i]] <- norm((reboot_est[[i]] - d), "F")
 }
 print("Local Estimator:")
