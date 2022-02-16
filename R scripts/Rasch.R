@@ -24,10 +24,39 @@ compute_average_estimator <- function(local_est_all, ground_truth) {
   avg_fnorm <- norm((avg_est - ground_truth), "F")
   return(list(est = avg_est, err = avg_fnorm))
 }
+# data <- simdata(a = a, d = d, N = 2, itemtype = rep("2PL", 10))
+# sum(a[a < 1]) == 0
+# data
+# for (sub_data in data) {
+#   if (sum(a[a < 1]) == 0 || sum(a[a > 0]) == 10) {
+
+#   }
+# }
+# prob <- 1 / (1 + exp(d - (rnorm(10, 0, 1) * a)))
+# prob
+# mask <- prob < 0.5
+# mask1 <- prob >= 0.5
+# prob[mask] = 0
+# prob[mask1] = 1
+# prob
+# data <- rbinom(c(0,1), 10, prob)
+# data
+# data <- generate_data(1, 1, 10, 111)
+# generate_data <- function(a, d, num_items, num_samples) {
+#   data <- list()
+#   for (i in 1:num_samples) {
+#     prob <- 1 / (1 + exp(d - (rnorm(num_items, 0, 1) * a)))
+#     mask_0 <- (prob < 0.5)
+
+#   }
+#   data <- matrix(rnorm(num_items * num_samples, 0, 1), num_samples, num_items)
+#   print(data)
+#   return(data)
+# }
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
-num_mc_iter <- 5
+num_mc_iter <- 3
 
 config_dict <- extract_model_configuration(100, 10, 1, "Rasch", 3)
 
@@ -40,7 +69,7 @@ d
 # Global parameters
 N = 1000
 J = 10
-m = 5
+m = 8
 p = 1
 R = 10 # Amplification ratio
 n <- N / m # local sample size
@@ -53,13 +82,13 @@ for (i in 1:num_mc_iter) {
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", 10))
   # Compute centralized MIRT estimator.
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
-        itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
+        itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
   # add constraint to parameter matrix.
   values[2, 6] <- 0
   values[2, 9] <- FALSE
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
-        TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
+        TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 5,
         gain = c(1, 1)), pars = values)
   # Compute full-sample mirt estimator and fnorm
   cmirt_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
@@ -71,13 +100,13 @@ for (i in 1:num_mc_iter) {
     local_data <- data[(1 + (l - 1) * n):(n * l),]
     # Fit the mirt model
     values <- mirt(local_data, num_latent_fac, method = "MHRM", TOL = 0.0001,
-        itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
+        itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
     # add constraint to parameter matrix.
     values[2, 6] <- 0
     values[2, 9] <- FALSE
     model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
-        TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
+        TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 5,
         gain = c(1, 1)), pars = values)
     # Extract model coefficients.
     local_est_all[[l]] <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][, 2])) #nolint
@@ -97,13 +126,13 @@ for (i in 1:num_mc_iter) {
   reboot_data <- as.data.frame(do.call(rbind, reboot_data))
   # Final fit using Reboot data.
   values <- mirt(reboot_data, num_latent_fac, method = "MHRM", TOL = 0.0001,
-        itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
+        itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
   # add constraint to parameter matrix.
   values[2, 6] <- 0
   values[2, 9] <- FALSE
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
-        TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
+        TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 5,
         gain = c(1, 1)), pars = values)
   reboot_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
   reboot_fnorm[[i]] <- norm((reboot_est[[i]] - d), "F")
