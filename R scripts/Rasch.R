@@ -55,7 +55,9 @@ for (i in 1:num_mc_iter) {
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
-  # TODO: add constraint to parameter matrix.
+  # add constraint to parameter matrix.
+  values[2, 6] <- 0
+  values[2, 9] <- FALSE
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
@@ -71,7 +73,9 @@ for (i in 1:num_mc_iter) {
     values <- mirt(local_data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
-    # TODO: add constraint to parameter matrix.
+    # add constraint to parameter matrix.
+    values[2, 6] <- 0
+    values[2, 9] <- FALSE
     model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
@@ -95,7 +99,9 @@ for (i in 1:num_mc_iter) {
   values <- mirt(reboot_data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
-  # TODO: add constraint to parameter matrix.
+  # add constraint to parameter matrix.
+  values[2, 6] <- 0
+  values[2, 9] <- FALSE
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
