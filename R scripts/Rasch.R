@@ -64,12 +64,12 @@ print("Rasch Model Implementation using MIRT package")
 # Ground Truth: small-scale experiments
 a <- matrix(1, 5, 1)
 a
-d <- matrix(c(0, 1, 2, 3, 4), 5, 1)
+d <- matrix(c(0, 1, 2, -1, -2), 5, 1)
 d
 # Global parameters
 N = 1000
 J = 5
-m = 20
+m = 50
 p = 1
 R = 10 # Amplification ratio
 n <- N / m # local sample size
@@ -80,6 +80,8 @@ for (i in 1:num_mc_iter) {
   # Generate data
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", J))
+  # Temporary solution: (by introducing noise)
+  # noise_index <- sample(1:1000, J,)
   # Compute centralized MIRT estimator.
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
