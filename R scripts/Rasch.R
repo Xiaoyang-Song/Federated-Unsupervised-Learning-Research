@@ -81,7 +81,7 @@ for (i in 1:num_mc_iter) {
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", J))
   # Temporary solution: (by introducing noise)
-  # noise_index <- sample(1:1000, J,)
+  # noise_index <- sample(1:1000, J, replace = TRUE)
   # Compute centralized MIRT estimator.
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
