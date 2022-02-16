@@ -27,7 +27,7 @@ compute_average_estimator <- function(local_est_all, ground_truth) {
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
-num_mc_iter <- 3
+num_mc_iter <- 5
 
 config_dict <- extract_model_configuration(100, 10, 1, "Rasch", 3)
 
@@ -51,7 +51,6 @@ for (i in 1:num_mc_iter) {
   # Generate data
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", 10))
-  data
   # Compute centralized MIRT estimator.
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 1, NCYCLES = 1e5,
@@ -60,11 +59,12 @@ for (i in 1:num_mc_iter) {
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
         TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 1,
         gain = c(1, 1)), pars = values)
+  # Compute full-sample mirt estimator and fnorm
   cmirt_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
   cmirt_fnorm[[i]] <- norm((cmirt[[i]] - d), "F")
   # Start distributed setting.
   local_est_all <- list()
-  for (l in 1:2) {
+  for (l in 1:m) {
     # Split data into m local machine.
     local_data <- data[(1 + (l - 1) * n):(n * l),]
     # Fit the mirt model
@@ -87,7 +87,7 @@ for (i in 1:num_mc_iter) {
   avg_fnorm[[i]] <- compute_average_estimator(local_est_all, d)$err
   # Generate Bootstrap samples.
   reboot_data <- list()
-  for (l in 1:2) {
+  for (l in 1:m) {
     reboot_data[[l]] <- simdata(a = a, d = local_est_all[[l]], N = n * R, itemtype = rep("2PL", J)) #nolint
   }
   reboot_data <- as.data.frame(do.call(rbind, reboot_data))
@@ -102,6 +102,8 @@ for (i in 1:num_mc_iter) {
   reboot_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
   reboot_fnorm[[i]] <- norm((reboot_est[[i]] - d), "F")
 }
+print("Full-Sample Estimator:")
+print(mean(cmirt_fnorm))
 print("Local Estimator:")
 print(mean(local_fnorm))
 print("Average Estimator:")
