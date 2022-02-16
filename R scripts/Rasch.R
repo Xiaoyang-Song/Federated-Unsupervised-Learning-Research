@@ -61,7 +61,7 @@ for (i in 1:num_mc_iter) {
         gain = c(1, 1)), pars = values)
   # Compute full-sample mirt estimator and fnorm
   cmirt_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
-  cmirt_fnorm[[i]] <- norm((cmirt[[i]] - d), "F")
+  cmirt_fnorm[[i]] <- norm((cmirt_est[[i]] - d), "F")
   # Start distributed setting.
   local_est_all <- list()
   for (l in 1:m) {
