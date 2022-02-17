@@ -97,7 +97,6 @@ for (i in 1:num_mc_iter) {
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", J))
   # TODO: process the data before fitting the model.
   # Temporary solution: (by introducing noise)
-  # noise_index <- sample(1:1000, J, replace = TRUE)
   # Compute centralized MIRT estimator.
   model <- fit_mirt(data, num_latent_fac)
   # Compute full-sample mirt estimator and fnorm
