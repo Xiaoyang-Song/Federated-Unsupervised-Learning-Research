@@ -33,7 +33,7 @@ fit_mirt <- function(data, num_latent_fac) {
   values[2, 6] <- 0
   values[2, 9] <- FALSE
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
-        TOL = 0.0001, verbose = FALSE, technical = list(NCYCLES = 1e5, MHDRAWS = 5,
+        TOL = 0.0001, verbose = FALSE, technical = list(NCYCLES = 1e5, MHDRAWS = 5, #nolint
         gain = c(1, 1)), pars = values)
   return(model)
 }
