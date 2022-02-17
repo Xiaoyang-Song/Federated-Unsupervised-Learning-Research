@@ -33,7 +33,7 @@ fit_mirt <- function(data, num_latent_fac) {
   values[2, 6] <- 0
   values[2, 9] <- FALSE
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
-        TOL = 0.0001, technical = list(NCYCLES = 1e5, MHDRAWS = 5,
+        TOL = 0.0001, verbose = FALSE, technical = list(NCYCLES = 1e5, MHDRAWS = 5,
         gain = c(1, 1)), pars = values)
   return(model)
 }
@@ -91,6 +91,7 @@ n <- N / m # local sample size
 reboot_fnorm <- avg_fnorm <- local_fnorm <- cmirt_fnorm <- rep(0, num_mc_iter) # nolint
 reboot_est <- avg_est <- local_est <- cmirt_est <- list() # nolint
 for (i in 1:num_mc_iter) {
+  print(paste("Monte Carlo Iteration", i))
   # Generate data
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", J))
