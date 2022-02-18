@@ -1,0 +1,28 @@
+\usepackage[linesnumbered, ruled, noline]{algorithm2e}
+
+\IncMargin{1em}
+\begin{algorithm}[h]
+    \SetAlgoNlRelativeSize{-1}
+    \SetNlSty{textbf}{}{:}
+    \caption{Retraining on Bootstrap samples (ReBoot)}   
+    \label{alg:reboot}
+    
+    \Indentp{-1.35em}
+    \KwIn{$\big\{\widehat{\bbeta}^{(k)}\big\}_{k=1}^{m}$, $\widetilde n$}
+    \Indentp{1.35em}
+
+    \For{$k = 1, \ldots, m$}{
+        \For{$i = 1, \ldots, \widetilde n$}{
+            Draw a Bootstrap feature vector $\widetilde{\bx}_{i}^{(k)}$ from the distribution $f_{\bx}(\cdot)$; \\
+            Draw a Bootstrap response $\widetilde{Y}_{i}^{(k)}$ according to $f_{Y | \bx}\big(\cdot| \widetilde{\bx}_{i}^{(k)}; \widehat{\bbeta}^{(k)}\big)$;
+        }
+        $\widetilde \cD ^ {(k)} \leftarrow  \big\{\big( \widetilde \bx_i^{(k)},\widetilde Y_i^{(k)}\big)\big\}_{i \in [\widetilde n]}$\;
+    }
+    $\widetilde \cD \leftarrow \cup_{k=1}^m \widetilde \cD ^ {(k)}$\;
+    $\widehat{\bbeta}^{\mathrm{rb}} \leftarrow \underset{\bbeta \in \cB}{\argmin}\ \ell_{\widetilde \cD} (\bbeta)$.
+    
+    \Indentp{-1.35em}
+    \KwOut{$\widehat\bbeta^{\mathrm{rb}}$}
+    \Indentp{1.35em}
+\end{algorithm} 
+\DecMargin{1em}
