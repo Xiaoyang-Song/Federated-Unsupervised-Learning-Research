@@ -1,6 +1,6 @@
 library(mirt)
 library(stats4)
-library(lattice)  
+library(lattice)
 
 sin_theta <- function(A1, A2) {
   v1 <- svd(A1)$u
