@@ -38,8 +38,8 @@ fit_mirt <- function(data, num_latent_fac) {
   return(model)
 }
 
-get_final_results <- function(cmirt_fnorm, local_fnorm, avg_fnorm, reboot_fnorm) {
-  # nolint
+get_final_results <- function(cmirt_fnorm, local_fnorm,
+                              avg_fnorm, reboot_fnorm) {
   print("Full-Sample Estimator:")
   print(mean(cmirt_fnorm))
   print("Local Estimator:")
