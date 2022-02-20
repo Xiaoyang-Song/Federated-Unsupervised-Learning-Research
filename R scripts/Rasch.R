@@ -37,35 +37,7 @@ fit_mirt <- function(data, num_latent_fac) {
         gain = c(1, 1)), pars = values)
   return(model)
 }
-# data <- simdata(a = a, d = d, N = 2, itemtype = rep("2PL", 10))
-# sum(a[a < 1]) == 0
-# data
-# for (sub_data in data) {
-#   if (sum(a[a < 1]) == 0 || sum(a[a > 0]) == 10) {
 
-#   }
-# }
-# prob <- 1 / (1 + exp(d - (rnorm(10, 0, 1) * a)))
-# prob
-# mask <- prob < 0.5
-# mask1 <- prob >= 0.5
-# prob[mask] = 0
-# prob[mask1] = 1
-# prob
-# data <- rbinom(c(0,1), 10, prob)
-# data
-# data <- generate_data(1, 1, 10, 111)
-# generate_data <- function(a, d, num_items, num_samples) {
-#   data <- list()
-#   for (i in 1:num_samples) {
-#     prob <- 1 / (1 + exp(d - (rnorm(num_items, 0, 1) * a)))
-#     mask_0 <- (prob < 0.5)
-
-#   }
-#   data <- matrix(rnorm(num_items * num_samples, 0, 1), num_samples, num_items)
-#   print(data)
-#   return(data)
-# }
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
