@@ -2,9 +2,9 @@ library(mirt)
 library(stats4)
 library(lattice)
 
-sin_theta <- function(A1, A2) {
-  v1 <- svd(A1)$u
-  v2 <- svd(A2)$u
+sin_theta <- function(a1, a2) {
+  v1 <- svd(a1)$u
+  v2 <- svd(a2)$u
   return(norm((v1 %*% t(v1) - v2 %*% t(v2)), "F"))
 }
 
@@ -18,17 +18,11 @@ extract_model_configuration <- function(N, J, p, model, mc) {
   ))
 }
 
-compute_average_estimator <- function(local_est_all, ground_truth) {
-  avg_est <- apply(simplify2array(local_est_all), 1:2, mean)
-  avg_fnorm <- norm((avg_est - ground_truth), "F")
-  return(list(est = avg_est, err = avg_fnorm))
-}
-
 fit_mirt <- function(data, num_latent_fac) {
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
-  # add constraint to parameter matrix.
+  # add identification constraint to parameter matrix.
   values[2, 6] <- 0
   values[2, 9] <- FALSE
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
@@ -100,8 +94,9 @@ for (i in 1:num_mc_iter) {
       local_fnorm[[i]] <- norm((local_est[[i]] - d), "F")
     }
   }
-  avg_est[[i]] <- compute_average_estimator(local_est_all, d)$est
-  avg_fnorm[[i]] <- compute_average_estimator(local_est_all, d)$err
+  # Compute average estimators and errors.
+  avg_est[[i]] <- apply(simplify2array(local_est_all), 1:2, mean)
+  avg_fnorm[[i]] <- norm((avg_est[[i]] - d), "F")
   # Generate Bootstrap samples.
   reboot_data <- list()
   for (l in 1:m) {
