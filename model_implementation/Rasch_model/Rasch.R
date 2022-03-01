@@ -49,14 +49,14 @@ a
 d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1)
 d
 # Model specification
-num_latent_fac <- 1 # For Rasch model, there is only one latent factor to extract.
+# For Rasch model, there is only one latent factor to extract.
+num_latent_fac <- 1
 print("Rasch Model Implementation using MIRT package")
 # Global parameters
-N <- 1000
-J <- 10
-m <- 10
-p <- 1
-R <- 10 # Amplification ratio
+N <- 1000 # global sample size
+J <- 10 # number of items
+m <- 10 # number of local machines
+R <- 10 # amplification ratio
 n <- N / m # local sample size
 
 # REBOOT algorithm
@@ -75,7 +75,7 @@ for (i in 1:num_mc_iter) {
   # Start distributed setting.
   local_est_all <- list()
   for (l in 1:m) {
-    # Split data into m local machine.
+    # Evenly split data into m local machine.
     local_data <- data[(1 + (l - 1) * n):(n * l),]
     # Fit the mirt model
     model <- fit_mirt(local_data, num_latent_fac)
