@@ -24,9 +24,9 @@ fit_mirt <- function(data, num_latent_fac) {
         gain = c(1, 1)), pars = "values")
   # add identification constraint to parameter matrix.
   values[2, 6] <- 0
-  values[2, 9] <- FALSE
+  values[2, 9] <- values[42, 9] <- FALSE
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
-        TOL = 0.0001, verbose = FALSE, technical = list(NCYCLES = 1e5, MHDRAWS = 5, #nolint
+        TOL = 0.0001, verbose = FALSE, technical = list(NCYCLES = 1e5, MHDRAWS = 10, #nolint
         gain = c(1, 1)), pars = values)
   return(model)
 }
@@ -48,6 +48,7 @@ a <- matrix(1, 10, 1)
 a
 d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1)
 d
+guess <- d / abs(d)
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
@@ -55,7 +56,7 @@ print("Rasch Model Implementation using MIRT package")
 # Global parameters
 N <- 1000 # global sample size
 J <- 10 # number of items
-m <- 10 # number of local machines
+m <- 20 # number of local machines
 R <- 10 # amplification ratio
 n <- N / m # local sample size
 
@@ -75,6 +76,7 @@ for (i in 1:num_mc_iter) {
   # Start distributed setting.
   local_est_all <- list()
   for (l in 1:m) {
+    print(paste("MIRT on Machine ", l))
     # Evenly split data into m local machine.
     local_data <- data[(1 + (l - 1) * n):(n * l),]
     # Fit the mirt model
