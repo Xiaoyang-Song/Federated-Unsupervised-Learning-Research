@@ -8,10 +8,10 @@ sin_theta <- function(a1, a2) {
   return(norm((v1 %*% t(v1) - v2 %*% t(v2)), "F"))
 }
 
-extract_model_configuration <- function(N, J, p, model, mc) {
+model_config <- function(n, j, p, model, mc) {
   return(Dict$new(
-      num_test_taker = N,
-      num_items = J,
+      num_test_taker = n,
+      num_items = j,
       num_latent_fac = p,
       model = model,
       num_mc_iter = mc
@@ -42,26 +42,21 @@ get_final_results <- function(cmirt_fnorm, local_fnorm,
   print("Reboot Estimator:")
   print(mean(reboot_fnorm))
 }
-
-# Model specification
-# For Rasch model, there is only one latent factor to extract.
-num_latent_fac <- 1
-num_mc_iter <- 2
-# TODO: automate the code by implementing a processing pipeline
-# config_dict <- extract_model_configuration(100, 10, 1, "Rasch", 3)
-
-print("Rasch Model Implementation using MIRT package")
-# Ground Truth: small-scale experiments
+# Simulation study setup
+num_mc_iter <- 2 # Ground Truth: small-scale experiments
 a <- matrix(1, 10, 1)
 a
-d <- matrix(c(0, 0.5, 1, 1.5, 2, 0, -0.5, -1, -1.5, -2), 10, 1)
+d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1)
 d
+# Model specification
+num_latent_fac <- 1 # For Rasch model, there is only one latent factor to extract.
+print("Rasch Model Implementation using MIRT package")
 # Global parameters
-N = 1000
-J = 10
-m = 10
-p = 1
-R = 10 # Amplification ratio
+N <- 1000
+J <- 10
+m <- 10
+p <- 1
+R <- 10 # Amplification ratio
 n <- N / m # local sample size
 
 # REBOOT algorithm
@@ -72,8 +67,6 @@ for (i in 1:num_mc_iter) {
   # Generate data
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", J))
-  # TODO: process the data before fitting the model.
-  # Temporary solution: (by introducing noise)
   # Compute centralized MIRT estimator.
   model <- fit_mirt(data, num_latent_fac)
   # Compute full-sample mirt estimator and fnorm
