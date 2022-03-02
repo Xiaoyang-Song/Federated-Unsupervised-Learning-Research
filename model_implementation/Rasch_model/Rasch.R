@@ -48,7 +48,8 @@ a <- matrix(1, 10, 1)
 a
 d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1)
 d
-guess <- d / abs(d)
+
+#TODO: Implementing the pipeline for all models.
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
 num_latent_fac <- 1
