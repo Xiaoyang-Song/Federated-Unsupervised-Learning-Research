@@ -23,6 +23,7 @@ fit_mirt <- function(data, num_latent_fac, d = 0) {
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
+  # TODO: automatic set the constraint based on input data.
   # add identification constraint to parameter matrix.
   values[2, 6] <- 0
   values[2, 9] <- values[42, 9] <- FALSE
@@ -81,7 +82,7 @@ R <- 10 # amplification ratio
 n <- N / m # local sample size
 # Global boolean flag: whether to check single response
 CHECK_SINGLE_RESPONSE <- FALSE #nolint
-
+EST_BOUND <- 2 # nolint
 # REBOOT algorithm
 reboot_fnorm <- avg_fnorm <- local_fnorm <- cmirt_fnorm <- rep(0, num_mc_iter) # nolint
 reboot_est <- avg_est <- local_est <- cmirt_est <- list() # nolint
@@ -101,8 +102,11 @@ for (i in 1:num_mc_iter) {
     print(paste("MIRT on Machine ", l))
     # Evenly split data into m local machine.
     local_data <- data[(1 + (l - 1) * n):(n * l),]
+    # TODO: If CHECK_SINGLE_RESPONSE is true, process the data before fit_mirt.
+    # TODO: Set all "singular" items to +/- EST_BOUND based on its response.
     # Fit the mirt model
     model <- fit_mirt(local_data, num_latent_fac)
+    # TODO: After fit_mirt, re-combine all estimation together.
     # Extract model coefficients.
     local_est_all[[l]] <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][, 2])) #nolint
     # Extract local estimator (WLOG, we take the estimator of the first client)
