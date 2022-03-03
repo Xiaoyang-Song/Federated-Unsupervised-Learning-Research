@@ -47,6 +47,9 @@ num_mc_iter <- 2 # Ground Truth: small-scale experiments
 a <- matrix(1, 10, 1)
 a
 d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1)
+# d <- matrix(c(0, -0.2, 0.05, -0.15, 0.10, -0.10, 0.15, -0.05, 0.20, 0), 10, 1) #nolint
+# d <- matrix(c(0, -0.2, 0.05, -0.15, 0.10, -0.10, 0.15, -0.05, 0.20, 0), 10, 1)-0.02 #nolint
+# TODO: draw samples from uniform distribution from -2 to 2.
 d
 
 #TODO: Implementing the pipeline for all models.
