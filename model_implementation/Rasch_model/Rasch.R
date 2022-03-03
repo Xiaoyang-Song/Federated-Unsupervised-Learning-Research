@@ -19,7 +19,7 @@ model_config <- function(n, j, p, model, mc) {
 }
 
 fit_mirt <- function(data, num_latent_fac, d = 0) {
-  num_cols <- ncol(data)
+  num_cols <- ncol(data) #nolint
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
