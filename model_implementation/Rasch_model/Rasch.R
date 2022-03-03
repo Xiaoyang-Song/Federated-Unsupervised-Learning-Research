@@ -79,6 +79,8 @@ J <- 10 # number of items
 m <- 20 # number of local machines
 R <- 10 # amplification ratio
 n <- N / m # local sample size
+# Global boolean flag: whether to check single response
+CHECK_SINGLE_RESPONSE <- FALSE #nolint
 
 # REBOOT algorithm
 reboot_fnorm <- avg_fnorm <- local_fnorm <- cmirt_fnorm <- rep(0, num_mc_iter) # nolint
