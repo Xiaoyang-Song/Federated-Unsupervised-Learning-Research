@@ -19,6 +19,7 @@ model_config <- function(n, j, p, model, mc) {
 }
 
 fit_mirt <- function(data, num_latent_fac) {
+  num_cols <- ncol(data)
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
@@ -42,11 +43,26 @@ get_final_results <- function(cmirt_fnorm, local_fnorm,
   print("Reboot Estimator:")
   print(mean(reboot_fnorm))
 }
+
+check_single_response <- function(data) {
+  cols <- list()
+  for (col in 1:ncol(data)) {
+    if (!any(data[, col] == 1)) {
+      cols[[col]] <- -1
+    } else if (!any(data[, col] == 0)) {
+      cols[[col]] <- 1
+    } else {
+      cols[[col]] <- 0
+    }
+  }
+  return(list(cols = cols))
+}
 # Simulation study setup
 num_mc_iter <- 2 # Ground Truth: small-scale experiments
 a <- matrix(1, 10, 1)
 a
-d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1)
+# d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1)
+d <- matrix(c(5, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1)
 # d <- matrix(c(0, -0.2, 0.05, -0.15, 0.10, -0.10, 0.15, -0.05, 0.20, 0), 10, 1) #nolint
 # d <- matrix(c(0, -0.2, 0.05, -0.15, 0.10, -0.10, 0.15, -0.05, 0.20, 0), 10, 1)-0.02 #nolint
 # TODO: draw samples from uniform distribution from -2 to 2.
