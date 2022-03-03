@@ -102,6 +102,8 @@ for (i in 1:num_mc_iter) {
     print(paste("MIRT on Machine ", l))
     # Evenly split data into m local machine.
     local_data <- data[(1 + (l - 1) * n):(n * l),]
+    # TODO: Add boolean logic to check whether need to check single response.
+    #       This is required for fast computation when running large scale exps.
     # TODO: If CHECK_SINGLE_RESPONSE is true, process the data before fit_mirt.
     # TODO: Set all "singular" items to +/- EST_BOUND based on its response.
     # Fit the mirt model
