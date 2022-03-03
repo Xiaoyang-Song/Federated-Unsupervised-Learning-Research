@@ -58,6 +58,9 @@ check_single_response <- function(data) {
   }
   return(list(cols = cols))
 }
+
+# TODO: implement a function to automatically check whether
+#       we need to check single response based on probabilities.
 # Simulation study setup
 num_mc_iter <- 2 # Ground Truth: small-scale experiments
 a <- matrix(1, 10, 1)
