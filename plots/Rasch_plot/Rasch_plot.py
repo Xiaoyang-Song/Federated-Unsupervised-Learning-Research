@@ -1,9 +1,8 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
-ESTIMATOR = ["AVGM", "LOCAL", "CMIRT", "REBOOT"]
-MARKER = ['o', 'x', '+', '*']
-
+ESTIMATOR = ["AVGM", "LOCAL", "CMIRT", "REBOOT", "DPCA"] 
+PLOT_MARKER = ['o', 'x', '+', '*', '∆']
 
 
 def plot_estimators():
