@@ -2,6 +2,7 @@ from audioop import avg
 from matplotlib import pyplot as plt
 import numpy as np
 
+# GLOBAL PARAMETERS
 ESTIMATOR = np.array(["AVGM", "LOCAL", "CMIRT", "REBOOT", "DPCA"])
 PLOT_MARKER = np.array(['o', 'x', '+', '*', '∆'])
 CONFIG = {
