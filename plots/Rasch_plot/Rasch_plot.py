@@ -1,6 +1,16 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
+ESTIMATOR = ["AVGM", "LOCAL", "CMIRT", "REBOOT"]
+MARKER = ['o', 'x', '+', '*']
+
+
+
+def plot_estimators():
+    """
+    Plot all the estimators that are included in the arguments.
+    """
+
 
 if __name__ == "__main__":
     K = np.array([5, 8, 10, 20, 25])
