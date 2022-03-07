@@ -58,6 +58,21 @@ check_single_response <- function(data) {
   }
   return(list(cols = cols))
 }
+col <- check_single_response(data)$cols
+mask <- col == 0
+mask
+data_trim <- data[, mask]
+values <- mirt(data_trim, num_latent_fac, method = "MHRM", TOL = 0.0001,
+        itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
+        gain = c(1, 1)), pars = "values")
+model <- mirt(data_trim, num_latent_fac, method = "MHRM", itemtype = "Rasch",
+        TOL = 0.0001, verbose = FALSE, technical = list(NCYCLES = 1e5, MHDRAWS = 10, #nolint
+        gain = c(1, 1)), pars = values)
+coef(model)
+coef <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][, 2]))
+df <- data.frame(coef)
+df
+
 
 # TODO: implement a function to automatically check whether
 #       we need to check single response based on probabilities.
@@ -78,7 +93,7 @@ d
 num_latent_fac <- 1
 print("Rasch Model Implementation using MIRT package")
 # Global parameters
-N <- 1000 # global sample size
+N <- 10 # global sample size
 J <- 10 # number of items
 m <- 20 # number of local machines
 R <- 10 # amplification ratio
