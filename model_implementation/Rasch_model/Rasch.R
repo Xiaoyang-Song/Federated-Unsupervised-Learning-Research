@@ -58,7 +58,23 @@ check_single_response <- function(data) {
       counter <- counter + 1
     }
   }
-  return(list(cols_idx = cols))
+  return(list(cols_info = cols))
+}
+
+combine_estimation <- function(BOUNDS, cols_info, est, num_latent_fac) {
+  #TODO: change the way of passing through BOUNDS information.
+  #      maybe find a way to resolve that outside this function.
+  bound_est <- rep(BOUNDS, num_latent_fac)
+  results <- list()
+  for (idx in 1:10) {
+    if (cols_info[idx] == 0) {
+      results[[idx]] <- bound_est * 1
+    } else if (cols_info[[idx]] == -1) {
+      results[[idx]] <- bound_est * (-1)
+    } else {
+      results[[idx]] <- coef[cols_info[[idx]]]
+    }
+  }
 }
 
 data <- simdata(a = a, d = d, N = 10, itemtype = rep("2PL", J))
