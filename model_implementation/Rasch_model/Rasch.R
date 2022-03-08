@@ -88,11 +88,11 @@ get_est <- function(data, num_latent_fac, J, d, CHECK_SINGLE_RESPONSE, BOUNDS) {
     data_trim <- data[, (cols_info > 0)]
     model <- fit_mirt(data = data_trim, num_latent_fac = num_latent_fac, d = d,
           cols_info = cols_info, CHECK_SINGLE_RESPONSE = CHECK_SINGLE_RESPONSE)
-    partial_estimator <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][, 2])) #nolint
+    partial_estimator <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
     estimator <- combine_estimation(BOUNDS = BOUNDS, cols_info = cols_info,
           est = partial_estimator, num_latent_fac = num_latent_fac, J = J)
   } else {
-    model <- fit_mirt(data = data_trim, num_latent_fac = num_latent_fac, d = d,
+    model <- fit_mirt(data = data, num_latent_fac = num_latent_fac, d = d,
           cols_info = cols_info, CHECK_SINGLE_RESPONSE = CHECK_SINGLE_RESPONSE)
     estimator <- matrix(coef(model, simplify = TRUE)[[1]][, 2])
   }
@@ -153,13 +153,13 @@ d
 num_latent_fac <- 1
 print("Rasch Model Implementation using MIRT package")
 # Global parameters
-N <- 10 # global sample size
+N <- 100 # global sample size
 J <- 10 # number of items
-m <- 20 # number of local machines
+m <- 5 # number of local machines
 R <- 10 # amplification ratio
 n <- N / m # local sample size
 # Global boolean flag: whether to check single response
-CHECK_SINGLE_RESPONSE <- FALSE #nolint
+CHECK_SINGLE_RESPONSE <- TRUE #nolint
 EST_BOUND <- 2 # nolint
 # REBOOT algorithm
 reboot_fnorm <- avg_fnorm <- local_fnorm <- cmirt_fnorm <- rep(0, num_mc_iter) # nolint
@@ -172,8 +172,8 @@ for (i in 1:num_mc_iter) {
   # Compute centralized MIRT estimator.
   # model <- fit_mirt(data, num_latent_fac)
   # Compute full-sample mirt estimator and fnorm
-  cmirt_est[[i]] <- get_est(data, num_latent_fac, J,
-                            d, CHECK_SINGLE_RESPONSE, EST_BOUND)
+  cmirt_est[[i]] <- simplify2array(get_est(data, num_latent_fac, J,
+                            d, CHECK_SINGLE_RESPONSE, EST_BOUND))
   # cmirt_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
   cmirt_fnorm[[i]] <- norm((cmirt_est[[i]] - d), "F")
   # Start distributed setting.
@@ -191,8 +191,9 @@ for (i in 1:num_mc_iter) {
     # TODO: After fit_mirt, re-combine all estimation together.
     # Extract model coefficients.
     # local_est_all[[l]] <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][, 2])) #nolint
-    local_est_all[[l]] <- get_est(local_data, num_latent_fac, J,
-                            d, CHECK_SINGLE_RESPONSE, EST_BOUND)
+    local_est_all[[l]] <- simplify2array(get_est(local_data, num_latent_fac, J,
+                            d, CHECK_SINGLE_RESPONSE, EST_BOUND))
+    print(local_est_all[[l]])
     # Extract local estimator (WLOG, we take the estimator of the first client)
     if (l == 1) {
       local_est[[i]] <- local_est_all[[l]]
@@ -200,7 +201,8 @@ for (i in 1:num_mc_iter) {
     }
   }
   # Compute average estimators and errors.
-  avg_est[[i]] <- apply(simplify2array(local_est_all), 1:2, mean)
+  # avg_est[[i]] <- apply(simplify2array(local_est_all), 1:2, mean)
+  avg_est[[i]] <- rowMeans(simplify2array(local_est_all))
   avg_fnorm[[i]] <- norm((avg_est[[i]] - d), "F")
   # Generate Bootstrap samples.
   reboot_data <- list()
@@ -212,8 +214,8 @@ for (i in 1:num_mc_iter) {
   model <- fit_mirt(reboot_data, num_latent_fac)
   # Extract reboot estimator and compute F-norm.
   # reboot_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
-  reboot_est[[i]] <- get_est(local_data, num_latent_fac, J,
-                            d, CHECK_SINGLE_RESPONSE, EST_BOUND)
+  reboot_est[[i]] <- simplify2array(get_est(local_data, num_latent_fac, J,
+                            d, CHECK_SINGLE_RESPONSE, EST_BOUND))
   reboot_fnorm[[i]] <- norm((reboot_est[[i]] - d), "F")
 }
 get_final_results(cmirt_fnorm, local_fnorm, avg_fnorm, reboot_fnorm)
