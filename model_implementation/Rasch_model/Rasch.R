@@ -82,11 +82,21 @@ combine_estimation <- function(BOUNDS, cols_info, est, num_latent_fac, J) {
   return(estimator = matrix(results))
 }
 
-get_estimation <- function(data, num_latent_fac, J, CHECK_SINGLE_RESPONSE, BOUNDS) {
+get_est <- function(data, num_latent_fac, J, d, CHECK_SINGLE_RESPONSE, BOUNDS) {
   if (CHECK_SINGLE_RESPONSE) {
-    cols_info <- check_single_response(data)$
+    cols_info <- check_single_response(data)$cols_info
+    data_trim <- data[, (cols_info > 0)]
+    model <- fit_mirt(data = data_trim, num_latent_fac = num_latent_fac, d = d,
+          cols_info = cols_info, CHECK_SINGLE_RESPONSE = CHECK_SINGLE_RESPONSE)
+    partial_estimator <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][, 2])) #nolint
+    estimator <- combine_estimation(BOUNDS = BOUNDS, cols_info = cols_info,
+          est = partial_estimator, num_latent_fac = num_latent_fac, J = J)
+  } else {
+    model <- fit_mirt(data = data_trim, num_latent_fac = num_latent_fac, d = d,
+          cols_info = cols_info, CHECK_SINGLE_RESPONSE = CHECK_SINGLE_RESPONSE)
+    estimator <- matrix(coef(model, simplify = TRUE)[[1]][, 2])
   }
-
+  return(estimator = estimator)
 }
 # fit_mirt(data_trim, 1, d, col)
 # data <- simdata(a = a, d = d, N = 10, itemtype = rep("2PL", J))
@@ -160,9 +170,11 @@ for (i in 1:num_mc_iter) {
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", J))
   # Compute centralized MIRT estimator.
-  model <- fit_mirt(data, num_latent_fac)
+  # model <- fit_mirt(data, num_latent_fac)
   # Compute full-sample mirt estimator and fnorm
-  cmirt_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
+  cmirt_est[[i]] <- get_est(data, num_latent_fac, J,
+                            d, CHECK_SINGLE_RESPONSE, EST_BOUND)
+  # cmirt_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
   cmirt_fnorm[[i]] <- norm((cmirt_est[[i]] - d), "F")
   # Start distributed setting.
   local_est_all <- list()
@@ -174,15 +186,13 @@ for (i in 1:num_mc_iter) {
     #       This is required for fast computation when running large scale exps.
     # TODO: If CHECK_SINGLE_RESPONSE is true, process the data before fit_mirt.
     # TODO: Set all "singular" items to +/- EST_BOUND based on its response.
-
-    if (CHECK_SINGLE_RESPONSE) {
-      cols_info <- check_single_response()
-    }
     # Fit the mirt model
-    model <- fit_mirt(local_data, num_latent_fac)
+    # model <- fit_mirt(local_data, num_latent_fac)
     # TODO: After fit_mirt, re-combine all estimation together.
     # Extract model coefficients.
-    local_est_all[[l]] <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][, 2])) #nolint
+    # local_est_all[[l]] <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][, 2])) #nolint
+    local_est_all[[l]] <- get_est(local_data, num_latent_fac, J,
+                            d, CHECK_SINGLE_RESPONSE, EST_BOUND)
     # Extract local estimator (WLOG, we take the estimator of the first client)
     if (l == 1) {
       local_est[[i]] <- local_est_all[[l]]
@@ -201,7 +211,9 @@ for (i in 1:num_mc_iter) {
   # Final fit using Reboot data.
   model <- fit_mirt(reboot_data, num_latent_fac)
   # Extract reboot estimator and compute F-norm.
-  reboot_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
+  # reboot_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
+  reboot_est[[i]] <- get_est(local_data, num_latent_fac, J,
+                            d, CHECK_SINGLE_RESPONSE, EST_BOUND)
   reboot_fnorm[[i]] <- norm((reboot_est[[i]] - d), "F")
 }
 get_final_results(cmirt_fnorm, local_fnorm, avg_fnorm, reboot_fnorm)
