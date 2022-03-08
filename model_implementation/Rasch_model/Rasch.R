@@ -98,41 +98,6 @@ get_est <- function(data, num_latent_fac, J, d, CHECK_SINGLE_RESPONSE, BOUNDS) {
   }
   return(estimator = estimator)
 }
-# fit_mirt(data_trim, 1, d, col)
-# data <- simdata(a = a, d = d, N = 10, itemtype = rep("2PL", J))
-# col <- check_single_response(data)$cols
-# mask <- col > 0
-# mask
-# data_trim <- data[, mask]
-# data_trim
-# values <- mirt(data_trim, num_latent_fac, method = "MHRM", TOL = 0.0001,
-#         itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
-#         gain = c(1, 1)), pars = "values")
-# model <- mirt(data_trim, num_latent_fac, method = "MHRM", itemtype = "Rasch",
-#         TOL = 0.0001, verbose = FALSE, technical = list(NCYCLES = 1e5, MHDRAWS = 10, #nolint
-#         gain = c(1, 1)), pars = values)
-# coef(model)
-# coef <- simplify2array(matrix(coef(model, simplify = TRUE)[[1]][, 2]))
-# coef
-# df <- data.frame(coef)
-# df
-# bounds <- rep(1, 1)
-# results <- list()
-# bounds
-# combine_estimation(2, col, coef, 1, 10)
-# d[which(col > 0)[1]]
-# length(which(col > 0))
-# col[col > 0][2]
-# for (idx in 1:10) {
-#   if (col[idx] == 0) {
-#     results[[idx]] <- bounds * 1
-#   } else if (col[[idx]] == -1) {
-#     results[[idx]] <- bounds * (-1)
-#   } else {
-#     results[[idx]] <- coef[col[[idx]]]
-#   }
-# }
-# matrix(results)
 
 # TODO: implement a function to automatically check whether
 #       we need to check single response based on probabilities.
