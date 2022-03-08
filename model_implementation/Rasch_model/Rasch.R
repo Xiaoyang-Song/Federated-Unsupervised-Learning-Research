@@ -23,7 +23,6 @@ fit_mirt <- function(data, num_latent_fac, d = 0, cols_info, CHECK_SINGLE_RESPON
   values <- mirt(data, num_latent_fac, method = "MHRM", TOL = 0.0001,
         itemtype = "Rasch", technical = list(MHDRAWS = 5, NCYCLES = 1e5,
         gain = c(1, 1)), pars = "values")
-  # TODO: automatic set the constraint based on input data.
   # add identification constraint to parameter matrix.
   if (CHECK_SINGLE_RESPONSE) {
     values[2, 6] <- d[which(cols_info > 0)[1]]
