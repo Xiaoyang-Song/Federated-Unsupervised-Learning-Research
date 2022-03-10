@@ -1,6 +1,6 @@
 # This folder contains the experimental results of the simulation study on Rasch model.
 
-### Rasch Simulation study results: m=20
+### Rasch Simulation study results: (Trial Experiments)
 
 [1] "Full-Sample Estimator:"\
 [1] 0.2934478\
@@ -12,6 +12,12 @@
 [1] 0.3075252
 
 ### Rasch Simulation with ground truth from uniform distribution:
+
+#### Ground truth parameters:
+
+Ground truth: [-0.1945, 0.1705, -0.0439, 0.0978, 0.1674, -0.1462, 0.07, -0.1645, 0.124, -0.04]
+
+#### Results:
 
 Global Sample size: N = 1000
 
