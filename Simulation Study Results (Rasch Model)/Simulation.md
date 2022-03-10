@@ -1,7 +1,9 @@
 # This folder contains the experimental results of the simulation study on Rasch model.
 
-### Rasch Simulation study results: (Trial Experiments)
+### Rasch Simulation study results: (Sanity check of implementation)
 
+Ground truth: [0, -0.5, 0.1, -0.4, 5, -0.3, 0.3, -0.2, 0.4, -0.1]
+(Note that in most cases, the responses of item5 will be all from the same category)
 [1] "Full-Sample Estimator:"\
 [1] 0.2934478\
 [1] "Local Estimator:"\
