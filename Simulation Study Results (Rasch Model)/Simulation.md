@@ -10,3 +10,8 @@
 [1] 0.3232812\
 [1] "Reboot Estimator:"\
 [1] 0.3075252
+
+### Rasch Simulation with ground truth from uniform distribution:
+
+Global Sample size: N = 1000 \
+| --- |

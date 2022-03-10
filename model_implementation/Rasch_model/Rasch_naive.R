@@ -62,7 +62,7 @@ check_single_response <- function(data) {
 # TODO: implement a function to automatically check whether
 #       we need to check single response based on probabilities.
 # Simulation study setup
-num_mc_iter <- 2 # Ground Truth: small-scale experiments
+num_mc_iter <- 1 # Ground Truth: small-scale experiments
 a <- matrix(1, 10, 1)
 a
 # d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1) #nolint
@@ -83,7 +83,7 @@ print("Rasch Model Implementation using MIRT package")
 # Global parameters
 N <- 1000 # global sample size
 J <- 10 # number of items
-m <- 20 # number of local machines
+m <- 50 # number of local machines
 R <- 10 # amplification ratio
 n <- N / m # local sample size
 # Global boolean flag: whether to check single response
