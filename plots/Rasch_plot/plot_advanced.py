@@ -30,7 +30,7 @@ def plot_estimators(est_type: list, est: np.ndarray, K: list, markers: list, CON
 
 
 if __name__ == "__main__":
-    K = np.array([5, 8, 10, 20, 25])
+    K = np.array([10, 20, 25, 40, 50])
     local_d = np.array([0.5316, 0.7024, 0.8468, 1.1301, 1.1702])
     avg_d = np.array([0.2624, 0.2652, 0.2703, 0.2741, 0.2819])
     reboot_d = np.array([0.2638, 0.2674, 0.2693, 0.2700, 0.2745])
