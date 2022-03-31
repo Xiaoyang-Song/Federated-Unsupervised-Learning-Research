@@ -25,8 +25,9 @@ fit_mirt <- function(data, num_latent_fac, d = 0) {
         gain = c(1, 1)), pars = "values")
   # TODO: automatic set the constraint based on input data.
   # add identification constraint to parameter matrix.
-  values[2, 6] <- -0.1945
-  values[2, 9] <- values[42, 9] <- FALSE
+  values[2, 6] <- 0.016
+  # values[2, 9] <- values[42, 9] <- FALSE
+  values[2, 9] <- FALSE
   model <- mirt(data, num_latent_fac, method = "MHRM", itemtype = "Rasch",
         TOL = 0.0001, verbose = FALSE, technical = list(NCYCLES = 1e5, MHDRAWS = 10, #nolint
         gain = c(1, 1)), pars = values)
@@ -63,26 +64,32 @@ check_single_response <- function(data) {
 #       we need to check single response based on probabilities.
 # Simulation study setup
 num_mc_iter <- 1 # Ground Truth: small-scale experiments
-a <- matrix(1, 10, 1)
+a <- matrix(1, 50, 1)
 a
 # d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1) #nolint
 # d <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1) #nolint
-# d <- runif(10, -0.2, 0.2) #nolint
+# d <- runif(50, -0.2, 0.2) #nolint
 # d <- matrix(c(0, -0.2, 0.05, -0.15, 0.10, -0.10, 0.15, -0.05, 0.20, 0), 10, 1) #nolint
 # d <- matrix(c(0, -0.2, 0.05, -0.15, 0.10, -0.10, 0.15, -0.05, 0.20, 0), 10, 1)-0.02 #nolint
 # TODO: draw samples from uniform distribution from -2 to 2.
-d <- matrix(c(-0.1945, 0.1705, -0.0439, 0.0978, 0.1674, -0.1462,
-                0.07, -0.1645, 0.124, -0.04), 10, 1)
-d
+# d <- matrix(c(-0.1945, 0.1705, -0.0439, 0.0978, 0.1674, -0.1462,
+#                 0.07, -0.1645, 0.124, -0.04), 10, 1)
+# d <- round(d, 3) #nolint
+d <- matrix(c(0.016, 0.008, -0.050, 0.003, 0.082, -0.177, 0.076, 0.119, 0.135, 0.053, # nolint
+            - 0.099, -0.045, 0.140, -0.124, -0.138, -0.187, -0.143, -0.025, 0.049, 0.042, # nolint
+            - 0.195, -0.127, 0.161, 0.073, 0.002, -0.181, -0.130, 0.143, -0.022, -0.033, # nolint
+            - 0.115, -0.115, 0.150, -0.046, 0.129, 0.012, -0.131, -0.133, 0.196, -0.135, # nolint
+            - 0.108, -0.020, 0.180, -0.073, -0.088, 0.132, -0.041, 0.118, 0.097, -0.112), 50, 1) # nolint
+
 #TODO: Implementing the pipeline for all models.
 # Model specification
 # For Rasch model, there is only one latent factor to extract.
-# set.seed(2022)
+# set.seed(2022) #nolint
 num_latent_fac <- 1
 print("Rasch Model Implementation using MIRT package")
 # Global parameters
-N <- 1000 # global sample size
-J <- 10 # number of items
+N <- 5000 # global sample size
+J <- 50 # number of items
 m <- 50 # number of local machines
 R <- 10 # amplification ratio
 n <- N / m # local sample size

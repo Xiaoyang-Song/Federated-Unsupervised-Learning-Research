@@ -44,7 +44,8 @@ Global Sample size: N = 2500
 ### Rasch Simulation Study (2) (Updated on Mar 30)
 
 Global Sample Size: N = 5000.
+Hidden Dimension: 50
 
-Number of local machines: m = 10, 20, 25, 40, 50, 100, 125, 200, 250.
+Number of local machines: m = 10, 20, 25, 40, 50, 100.
 
-Local sample size: n = 500, 250, 200, 125, 100, 50, 40, 25, 20.
+Local sample size: n = 500, 250, 200, 125, 100, 50.
