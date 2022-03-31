@@ -54,6 +54,19 @@ Output file name: <num*dimension>*<num*local_machine>*<num_local_sample_size>
 
 Regime II: Fixed global sample size = 4000.
 
-Hidden Dimension: 20.
+Hidden Dimension: 20
 
-Number of local machines: 10, 20, 40, 50, 80, 100
+Number of local machines (m): 10, 20, 40, 50, 80, 100
+
+### Experimental Results:
+
+#### Hidden-dim = 20. N = 4000.
+
+| m      | 10     | 20     | 40     | 50     | 80     | 100    | 125    |
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| LOCAL  | 0.5643 | 0.7146 | 1.0318 | 1.3842 | 1.6472 | 1.7794 | 2.1201 |
+| AVGM   | 0.1624 | 0.1742 | 0.1827 | 0.1703 | 0.2235 | 0.2478 | 0.2652 |
+| REBOOT | 0.1783 | 0.1799 | 0.1919 | 0.1462 | 0.2038 | 0.2207 | 0.2314 |
+| CMIRT  | 0.1625 | 0.1625 | 0.1625 | 0.1625 | 0.1625 | 0.1625 | 0.1625 |
+
+Remark: the experiments of m = 125 on greatlake is problematic because of warning. The result is rerun on local computer for inspection. Some of the iterations do not converge, which lead to strange result.
