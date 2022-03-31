@@ -80,7 +80,8 @@ d <- matrix(c(0.016, 0.008, -0.050, 0.003, 0.082, -0.177, 0.076, 0.119, 0.135, 0
             - 0.195, -0.127, 0.161, 0.073, 0.002, -0.181, -0.130, 0.143, -0.022, -0.033, # nolint
             - 0.115, -0.115, 0.150, -0.046, 0.129, 0.012, -0.131, -0.133, 0.196, -0.135, # nolint
             - 0.108, -0.020, 0.180, -0.073, -0.088, 0.132, -0.041, 0.118, 0.097, -0.112), 50, 1) # nolint
-
+d <- matrix(d, 10, 5)
+t(d)
 #TODO: Implementing the pipeline for all models.
 # Model specification
 # For Rasch model, there is only one latent factor to extract.

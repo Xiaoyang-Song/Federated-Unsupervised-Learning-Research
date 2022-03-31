@@ -43,10 +43,10 @@ Global Sample size: N = 2500
 
 ### Rasch Simulation Study (2) (Updated on Mar 30)
 
-Regime I: Fixed local sample size = 100.
+Regime I: Fixed local sample size = 75. (this is obtained by local inspection and experiments)
 Hidden Dimension: 50.
 
-Number of local machines (Global sample size): m = 5 (500), 10(1000), 15(1500), 20(2000), 25(2500), 30(3000).
+Number of local machines (Global sample size): m = 5, 10 , 15, 20, 25, 30, 35, 40.
 
 The experiments are run via the GreakLake supercomputing platform:
 
@@ -57,6 +57,13 @@ Regime II: Fixed global sample size = 4000.
 Hidden Dimension: 20
 
 Number of local machines (m): 10, 20, 40, 50, 80, 100
+
+Ground Truth Parameters:
+[1,] 0.016 0.008 -0.050 0.003 0.082 -0.177 0.076 0.119 0.135 0.053 \
+[2,] -0.099 -0.045 0.140 -0.124 -0.138 -0.187 -0.143 -0.025 0.049 0.042 \
+[3,] -0.195 -0.127 0.161 0.073 0.002 -0.181 -0.130 0.143 -0.022 -0.033 \
+[4,] -0.115 -0.115 0.150 -0.046 0.129 0.012 -0.131 -0.133 0.196 -0.135 \
+[5,] -0.108 -0.020 0.180 -0.073 -0.088 0.132 -0.041 0.118 0.097 -0.112
 
 ### Experimental Results:
 
@@ -80,4 +87,3 @@ Remark: the experiments of m=10, m=100 and m = 125 on greatlake is problematic b
 | CMIRT  | 0.5012 | 0.4887 | 0.4632 | 0.4226 | 0.3312 | 0.2843 | 0.2214 | 0.2034 |
 
 Note that all experiments for regime II are run on local computer with 25 Monte Carlo replications. Plan to run this on Greatlake with 100 Monte Carlo iterations later.
-
