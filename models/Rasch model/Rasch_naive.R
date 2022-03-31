@@ -138,4 +138,5 @@ for (i in 1:num_mc_iter) {
   reboot_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
   reboot_fnorm[[i]] <- norm((reboot_est[[i]] - d), "F")
 }
+
 get_final_results(cmirt_fnorm, local_fnorm, avg_fnorm, reboot_fnorm)

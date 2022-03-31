@@ -40,3 +40,11 @@ Global Sample size: N = 2500
 | AVGM   | 0.1424 | 0.1462 | 0.1631 | 0.1703 | 0.1962 |
 | REBOOT | 0.1473 | 0.1488 | 0.1587 | 0.1462 | 0.1741 |
 | CMIRT  | 0.1316 | 0.1316 | 0.1316 | 0.1316 | 0.1316 |
+
+### Rasch Simulation Study (2) (Updated on Mar 30)
+
+Global Sample Size: N = 5000.
+
+Number of local machines: m = 10, 20, 25, 40, 50, 100, 125, 200, 250.
+
+Local sample size: n = 500, 250, 200, 125, 100, 50, 40, 25, 20.
