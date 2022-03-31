@@ -60,7 +60,7 @@ Number of local machines (m): 10, 20, 40, 50, 80, 100
 
 ### Experimental Results:
 
-#### Hidden-dim = 20. Regime I: N = 4000.
+#### Dimension = 20. Regime I: N = 4000.
 
 | m      | 10     | 20     | 40     | 50     | 80     | 100    | 125    |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
@@ -69,12 +69,15 @@ Number of local machines (m): 10, 20, 40, 50, 80, 100
 | REBOOT | 0.1783 | 0.1799 | 0.1919 | 0.1462 | 0.2038 | 0.2207 | 0.2314 |
 | CMIRT  | 0.1625 | 0.1625 | 0.1625 | 0.1625 | 0.1625 | 0.1625 | 0.1625 |
 
-Remark: the experiments of m = 125 on greatlake is problematic because of warning. The result is rerun on local computer for inspection. Some iterations of the MH-RM algorithm do not converge, which lead to strange result.
+Remark: the experiments of m=10, m=100 and m = 125 on greatlake is problematic because of warning. The result is rerun on local computer for inspection. Some iterations of the MH-RM algorithm do not converge, which lead to strange result.
 
-#### Hidden-dim = 50. Regime II: n = 75.
+#### Dimensiion = 50. Regime II: n = 75.
 
 | m      | 5      | 10     | 15     | 20     | 25     | 30     | 35     | 40     |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | AVGM   | 0.5932 | 0.5211 | 0.4836 | 0.4623 | 0.4180 | 0.394  | 0.3698 | 0.3401 |
 | REBOOT | 0.6321 | 0.5476 | 0.5029 | 0.4553 | 0.3764 | 0.3272 | 0.2653 | 0.2431 |
 | CMIRT  | 0.5012 | 0.4887 | 0.4632 | 0.4226 | 0.3312 | 0.2843 | 0.2214 | 0.2034 |
+
+Note that all experiments for regime II are run on local computer with 25 Monte Carlo replications. Plan to run this on Greatlake with 100 Monte Carlo iterations later.
+
