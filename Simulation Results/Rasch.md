@@ -43,9 +43,17 @@ Global Sample size: N = 2500
 
 ### Rasch Simulation Study (2) (Updated on Mar 30)
 
-Global Sample Size: N = 5000.
-Hidden Dimension: 50
+Regime I: Fixed local sample size = 100.
+Hidden Dimension: 50.
 
-Number of local machines: m = 10, 20, 25, 40, 50, 100.
+Number of local machines (Global sample size): m = 5 (500), 10(1000), 15(1500), 20(2000), 25(2500), 30(3000).
 
-Local sample size: n = 500, 250, 200, 125, 100, 50.
+The experiments are run via the GreakLake supercomputing platform:
+
+Output file name: <num*dimension>*<num*local_machine>*<num_local_sample_size>
+
+Regime II: Fixed global sample size = 4000.
+
+Hidden Dimension: 20.
+
+Number of local machines: 10, 20, 40, 50, 80, 100

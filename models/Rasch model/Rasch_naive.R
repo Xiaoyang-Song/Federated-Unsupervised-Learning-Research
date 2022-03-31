@@ -90,7 +90,7 @@ print("Rasch Model Implementation using MIRT package")
 # Global parameters
 N <- 5000 # global sample size
 J <- 50 # number of items
-m <- 50 # number of local machines
+m <- 2 # number of local machines
 R <- 10 # amplification ratio
 n <- N / m # local sample size
 # Global boolean flag: whether to check single response
@@ -105,6 +105,7 @@ for (i in 1:num_mc_iter) {
   # Data is generated using 2-parameter logistic model (slope is fixed to be 1).
   data <- simdata(a = a, d = d, N = N, itemtype = rep("2PL", J))
   # Compute centralized MIRT estimator.
+  print("CMIRT COMPUTATION...")
   model <- fit_mirt(data, num_latent_fac)
   # Compute full-sample mirt estimator and fnorm
   cmirt_est[[i]] <- matrix(coef(model, simplify = TRUE)[[1]][, 2]) #nolint
