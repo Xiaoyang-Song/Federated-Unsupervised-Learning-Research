@@ -28,6 +28,7 @@ if __name__ == "__main__":
     plt.plot(K, avg_d, marker='+', label="AVGM estimator")
     # plt.plot(K, local_d, marker='*', label="Local estimator")
     plt.legend()
+    plt.ylim(ymin=0.05)
     plt.xlabel("Number of Local Machine (m)")
     plt.title("L2-distance vs. m (number of machines)")
     plt.savefig("plots/Rasch_plot/Rasch-2500-1.png")
