@@ -33,44 +33,46 @@ if __name__ == "__main__":
     # plt.title("L2-distance vs. m (number of machines)")
     # plt.savefig("plots/Rasch_plot/Rasch-2500-1.png")
     # plt.close()
-    # Plot 3/31 meeting
-    K = np.array([10, 20, 40, 50, 80, 100, 125])
-    local_d = np.array(
-        [0.5643, 0.7146, 1.0318, 1.3842, 1.6472, 1.7794, 2.1201])
-    avg_d = np.array([0.1624, 0.1742, 0.1827, 0.2111, 0.2235, 0.2478, 0.2652])
-    reboot_d = np.array(
-        [0.1783, 0.1799, 0.1919, 0.1996, 0.2075, 0.2207, 0.2314])
-    cmirt_d = np.array([0.1625] * 7)
-    plt.plot(K, reboot_d, marker='o', label="REBOOT estimator")
-    plt.plot(K, cmirt_d, marker='s', label="Full-sample estimator")
-    plt.plot(K, avg_d, marker='^', label="AVGM estimator")
-    # plt.plot(K, local_d, marker='*', label="Local estimator")
-    plt.legend()
-    # plt.xlim(xmin=10)
-    # plt.ylim(ymin=0, ymax=0.4)
-    plt.xlabel("Number of Local Machine (m)")
-    plt.xticks(K, K)
-    plt.title("L2-distance vs. m (number of machines)")
-    plt.savefig("plots/Rasch_plot/Rasch-4000.png")
-    plt.close()
 
-    K = np.array([5, 10, 15, 20, 25, 30, 35, 40])
+    # PLOT 3/31 MEETING
+    # K = np.array([10, 20, 40, 50, 80, 100, 125])
     # local_d = np.array(
     #     [0.5643, 0.7146, 1.0318, 1.3842, 1.6472, 1.7794, 2.1201])
-    avg_d = np.array([0.5932, 0.5211, 0.4836, 0.4623,
-                     0.4180, 0.394, 0.3698, 0.3401])
-    reboot_d = np.array(
-        [0.6321, 0.5476, 0.5029, 0.4553, 0.3764, 0.3272, 0.2653, 0.2431])
-    cmirt_d = np.array([0.5012, 0.4887, 0.4632, 0.4226,
-                       0.3312, 0.2843, 0.2214, 0.2034])
-    plt.plot(K, reboot_d, marker='o', label="REBOOT estimator")
-    plt.plot(K, cmirt_d, marker='s', label="Full-sample estimator")
-    plt.plot(K, avg_d, marker='^', label="AVGM estimator")
-    # plt.plot(K, local_d, marker='*', label="Local estimator")
-    plt.legend()
-    # plt.xlim(xmin=10)
-    plt.ylim(ymin=0.1, ymax=0.7)
-    plt.xlabel("Number of Local Machine (m)")
-    plt.title("L2-distance vs. m (number of machines)")
-    plt.savefig("plots/Rasch_plot/Rasch-75.png")
-    plt.close()
+    # avg_d = np.array([0.1624, 0.1742, 0.1827, 0.2111, 0.2235, 0.2478, 0.2652])
+    # reboot_d = np.array(
+    #     [0.1783, 0.1799, 0.1919, 0.1996, 0.2075, 0.2207, 0.2314])
+    # cmirt_d = np.array([0.1625] * 7)
+    # plt.plot(K, reboot_d, marker='o', label="REBOOT estimator")
+    # plt.plot(K, cmirt_d, marker='s', label="Full-sample estimator")
+    # plt.plot(K, avg_d, marker='^', label="AVGM estimator")
+    # # plt.plot(K, local_d, marker='*', label="Local estimator")
+    # plt.legend()
+    # # plt.xlim(xmin=10)
+    # # plt.ylim(ymin=0, ymax=0.4)
+    # plt.xlabel("Number of Local Machine (m)")
+    # plt.xticks(K, K)
+    # plt.title("L2-distance vs. m (number of machines)")
+    # plt.savefig("plots/Rasch_plot/Rasch-4000.png")
+    # plt.close()
+
+    # K = np.array([5, 10, 15, 20, 25, 30, 35, 40])
+    # # local_d = np.array(
+    # #     [0.5643, 0.7146, 1.0318, 1.3842, 1.6472, 1.7794, 2.1201])
+    # avg_d = np.array([0.5932, 0.5211, 0.4836, 0.4623,
+    #                  0.4180, 0.394, 0.3698, 0.3401])
+    # reboot_d = np.array(
+    #     [0.6321, 0.5476, 0.5029, 0.4553, 0.3764, 0.3272, 0.2653, 0.2431])
+    # cmirt_d = np.array([0.5012, 0.4887, 0.4632, 0.4226,
+    #                    0.3312, 0.2843, 0.2214, 0.2034])
+    # plt.plot(K, reboot_d, marker='o', label="REBOOT estimator")
+    # plt.plot(K, cmirt_d, marker='s', label="Full-sample estimator")
+    # plt.plot(K, avg_d, marker='^', label="AVGM estimator")
+    # # plt.plot(K, local_d, marker='*', label="Local estimator")
+    # plt.legend()
+    # # plt.xlim(xmin=10)
+    # plt.ylim(ymin=0.1, ymax=0.7)
+    # plt.xlabel("Number of Local Machine (m)")
+    # plt.title("L2-distance vs. m (number of machines)")
+    # plt.savefig("plots/Rasch_plot/Rasch-75.png")
+    # plt.close()
+    pass
