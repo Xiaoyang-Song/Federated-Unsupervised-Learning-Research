@@ -1,7 +1,7 @@
 library(stats4)
 library(mirt)
 
-N <- 100
+N <- 1000
 J <- 10
 a <- matrix(1, 10, 1)
 est_x_ratio <- 1000
@@ -21,5 +21,7 @@ nll <- function(d) {
 }
 # the vector below are starting values of estimation
 # nlm() uses Newton-type minimization algorithm.
-nlm_obj <- nlm(nll, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+nlm_obj <- nlm(nll, p = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), hessian = TRUE, iterlim = 500, print.level = 2)
+# print(glm_obj)
+# nlm_obj <- nlm(nll, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
 print(nlm_obj)
