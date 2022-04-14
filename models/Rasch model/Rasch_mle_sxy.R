@@ -35,4 +35,5 @@ nlm_obj <- nlm(nll, p = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), hessian = TRUE, iterlim
 # print(glm_obj)
 # nlm_obj <- nlm(nll, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
 print(nlm_obj)
-print(nlm_obj$estimate)
+print(coef(nlm_obj))
+
