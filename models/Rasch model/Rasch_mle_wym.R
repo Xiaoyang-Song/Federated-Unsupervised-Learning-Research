@@ -6,7 +6,7 @@ mse <- function(x) {
   return(sum(x ^ 2))
 }
 
-J <- 50
+J <- 3
 R <- 10
 N1 <- 3000 # Global Sample Size
 N2 <- N1 * R # Sample size to estimate expectation

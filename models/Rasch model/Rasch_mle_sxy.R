@@ -22,8 +22,8 @@ Y <- simdata(a = a, d = d_star, N = N, itemtype = rep("2PL", J))
 nll <- function(d) {
   loss <- 0
   for (i in 1:N) {
+    x <- rnorm(est_x_ratio, 0, 1)
     for (j in 1:J) {
-      x <- rnorm(est_x_ratio, 0, 1)
       loss <- loss + mean(-Y[i, j] * (x - d[j]) + log(1 + exp(x - d[j])))
     }
   }
