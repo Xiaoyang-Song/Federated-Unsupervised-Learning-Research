@@ -32,17 +32,24 @@ for (t in 1:5) {
   Y <- simdata(a = a, d = d_star, N = N1, itemtype = rep("2PL", J))
 
   #--------------------------------------------------------------
-  X_tilde <- matrix(rep(rnorm(N2), times = J), N2, J)
+  X_tilde <- matrix(rep(rnorm(N2), times = J), N2, J) # X_tilde dimension: N2 x J #nolint
   Y_tilde <- Y
   for (i in 1:(R - 1)) {
     Y_tilde <- rbind(Y_tilde, Y)
   }
+  # The resulting Y_tilde is of dimension (N1 x R) x J = N2 x J
   I_d <- matrix(0, N2 * J, J)
   for (j in 1:J) {
-    I_d[(((j - 1) * N2 + 1):(j * N2)), j] <- rep(N2)
+    I_d[(((j - 1) * N2 + 1):(j * N2)), j] <- rep(1, N2)
   }
+  # glm fit function
+  # offset(): tells the formula that these parameters are not freely-estimated.
+  # I_d: tells which ds are involved in the formula.
+  # -1 : tells the formula that there is no intercept term.
+  # binomial: default link function is logistic link
   fit1 <- glm(c(Y_tilde) ~ offset(c(X_tilde)) + I_d - 1, family = binomial,
               control = list(maxit = 500))
+
   d_fit1 <- coef(fit1)
   error_surr[t] <- mse(d_star - d_fit1)
 
