@@ -1,4 +1,3 @@
-from audioop import avg
 from matplotlib import pyplot as plt
 # from matplotlib.lines import _LineStyle
 import numpy as np
