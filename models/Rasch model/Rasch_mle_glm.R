@@ -12,10 +12,11 @@ cache <- function(root_path) {
 }
 
 J <- 50
-R <- 10
+R <- 5
 N1 <- 2000 # Global Sample Size
 N2 <- N1 * R # Sample size to estimate expectation
-a <- matrix(1,J, 1)
+a <- matrix(1, J, 1)
+mu <- -0.02
 # d_star <- runif(J, 0, 0.2) #nolint
 # d_star <- matrix(c(0, -0.5, 0.1, -0.4, 0.2, -0.3, 0.3, -0.2, 0.4, -0.1), 10, 1)
 # d_star <- matrix(c(0.016, 0.008, -0.050, 0.003, 0.082, -0.177, 0.076, 0.119, 0.135, 0.053, # nolint
@@ -28,15 +29,15 @@ d_star <- matrix(c(0.016, 0.008, -0.050, 0.003, 0.082, -0.177, 0.076, 0.119, 0.1
 # d_star
 error_surr <- rep(0, 100)
 error_mirt <- rep(0, 100)
-for (t in 1:5) {
+for (t in 1:50) {
   # UNCOMMENT the following if we want to generate data ourselves
   # X <- matrix(rep(rnorm(N1), times = J), N1, J) #nolint
   # D_star <- matrix(rep(d_star, each = N1), N1, J) #nolint
   # p <- 1 / (1 + exp(-(X - D_star))) #nolint
   # Y <- t(sapply(1:N1, function(i) rbinom(n = J, size = 1, prob = p[i,]))) #nolint
-  Y <- simdata(a = a, d = d_star, N = N1, itemtype = rep("2PL", J), mu=0.00)
+  Y <- simdata(a = a, d = d_star, N = N1, itemtype = rep("2PL", J))
 
-  X_tilde <- matrix(rep(rnorm(N2), times = J), N2, J) # X_tilde dimension: N2 x J #nolint
+  X_tilde <- matrix(rep(rnorm(N2, mean = mu, sd = 1), times = J), N2, J) # X_tilde dimension: N2 x J #nolint
   Y_tilde <- Y
   for (i in 1:(R - 1)) {
     Y_tilde <- rbind(Y_tilde, Y)
@@ -58,13 +59,19 @@ for (t in 1:5) {
   error_surr[t] <- mse(d_star - d_fit1)
 
   #--------------------------------------------------------------
-  fit2 <- mirt(data.frame(Y), 1, itemtype = "Rasch") # DEFAULT algorithm is "S-EM" #nolint
+  values <- mirt(data.frame(Y), 1, itemtype = "Rasch", pars = "values") # DEFAULT algorithm is "S-EM" #nolint
+  values[201, 6] <- mu # Adjust the mean vector
+  fit2 <- mirt(data.frame(Y), 1, itemtype = "Rasch", pars = values)
   # TRY MIRT WITH MHRM ALGORITHM
   # fit2 <- mirt(data.frame(Y), 1, method = "MHRM", TOL = 0.0001, itemtype = 'Rasch') #nolint
   d_fit2 <- sapply(1:J, function(j) coef(fit2)[[j]][2])
   error_mirt[t] <- mse(d_star - d_fit2)
 }
 print("Surrogate Loss MLE:")
-print(round(mean(error_surr), 6))
+sur_ls <- round(mean(error_surr), 6)
+print(sur_ls)
 print("CMIRT:")
-print(round(mean(error_mirt), 6))
+cmirt <- round(mean(error_mirt), 6)
+print(cmirt)
+print(cmirt - sur_ls)
+d_fit2
