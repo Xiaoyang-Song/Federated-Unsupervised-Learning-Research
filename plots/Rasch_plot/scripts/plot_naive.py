@@ -55,26 +55,26 @@ if __name__ == "__main__":
     # plt.savefig("plots/Rasch_plot/Rasch-4000.png")
     # plt.close()
 
-    K = np.array([5, 10, 15, 20, 25, 30, 35, 40])
-    # local_d = np.array(
-    #     [0.5643, 0.7146, 1.0318, 1.3842, 1.6472, 1.7794, 2.1201])
-    avg_d = np.array([0.5932, 0.5211, 0.4836, 0.4623,
-                     0.4180, 0.394, 0.3698, 0.3401])
-    reboot_d = np.array(
-        [0.6321, 0.5476, 0.5029, 0.4553, 0.3764, 0.3272, 0.2653, 0.2431])
-    cmirt_d = np.array([0.5012, 0.4887, 0.4632, 0.4226,
-                       0.3312, 0.2843, 0.2214, 0.2034])
-    plt.plot(K, reboot_d, marker='o', label="REBOOT estimator")
-    plt.plot(K, cmirt_d, marker='s', label="Full-sample estimator")
-    plt.plot(K, avg_d, marker='^', label="AVGM estimator")
-    # plt.plot(K, local_d, marker='*', label="Local estimator")
-    plt.legend()
-    # plt.xlim(xmin=10)
-    plt.ylim(ymin=0.1, ymax=0.7)
-    plt.xlabel("Number of Local Machine (m)")
-    plt.title("L2-distance vs. m (number of machines)")
-    plt.savefig("plots/Rasch_plot/Rasch-75.png")
-    plt.close()
+    # K = np.array([5, 10, 15, 20, 25, 30, 35, 40])
+    # # local_d = np.array(
+    # #     [0.5643, 0.7146, 1.0318, 1.3842, 1.6472, 1.7794, 2.1201])
+    # avg_d = np.array([0.5932, 0.5211, 0.4836, 0.4623,
+    #                  0.4180, 0.394, 0.3698, 0.3401])
+    # reboot_d = np.array(
+    #     [0.6321, 0.5476, 0.5029, 0.4553, 0.3764, 0.3272, 0.2653, 0.2431])
+    # cmirt_d = np.array([0.5012, 0.4887, 0.4632, 0.4226,
+    #                    0.3312, 0.2843, 0.2214, 0.2034])
+    # plt.plot(K, reboot_d, marker='o', label="REBOOT estimator")
+    # plt.plot(K, cmirt_d, marker='s', label="Full-sample estimator")
+    # plt.plot(K, avg_d, marker='^', label="AVGM estimator")
+    # # plt.plot(K, local_d, marker='*', label="Local estimator")
+    # plt.legend()
+    # # plt.xlim(xmin=10)
+    # plt.ylim(ymin=0.1, ymax=0.7)
+    # plt.xlabel("Number of Local Machine (m)")
+    # plt.title("L2-distance vs. m (number of machines)")
+    # plt.savefig("plots/Rasch_plot/Rasch-75.png")
+    # plt.close()
 
     # PLOT 04/14 meeting
     # N = np.array([200, 500, 1000, 1500, 2000, 2500, 3000])
@@ -111,18 +111,18 @@ if __name__ == "__main__":
     # plt.savefig("plots/Rasch_plot/mle-20.png")
     # plt.close()
 
-    # N = np.array([200, 500, 1000, 1500, 2000, 2500, 3000])
-    # cmirt = np.array([1.48699, 0.59634, 0.31882,
-    #                  0.20567, 0.16459, 0.12434, 0.09603])
-    # mle = np.array(
-    #     [1.67656, 0.71255, 0.37733, 0.23985, 0.19077, 0.14916, 0.12225])
-    # plt.plot(N, cmirt, marker='o', label="MIRT Estimator")
-    # plt.plot(N, mle, marker='s', label="surr_loss MLE estimator")
-    # plt.legend()
-    # # plt.xlim(xmin=10)
-    # # plt.ylim(ymin=0.1, ymax=0.7)
-    # plt.xlabel("Global Sample Size")
-    # plt.xticks(N, N)
-    # plt.title("MSE vs. Global Sample Size")
-    # plt.savefig("plots/Rasch_plot/mle-50.png")
-    # plt.close()
+    N = np.array([200, 500, 1000, 1500, 2000, 2500, 3000])
+    cmirt = np.array([1.48699, 0.59634, 0.31882,
+                     0.20567, 0.16459, 0.12434, 0.09603])
+    mle = np.array(
+        [1.67656, 0.71255, 0.37733, 0.23985, 0.19077, 0.14916, 0.12225])
+    plt.plot(N, cmirt, marker='o', label="MIRT Estimator")
+    plt.plot(N, mle, marker='s', label="surr_loss MLE estimator")
+    plt.legend()
+    # plt.xlim(xmin=10)
+    # plt.ylim(ymin=0.1, ymax=0.7)
+    plt.xlabel("Global Sample Size")
+    plt.xticks(N, N)
+    plt.title("MSE vs. Global Sample Size")
+    plt.savefig("plots/Rasch_plot/mirt-mle-50.png")
+    plt.close()
