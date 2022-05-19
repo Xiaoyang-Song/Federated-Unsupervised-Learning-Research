@@ -31,6 +31,7 @@ a
 #               -0.72, -0.14, -1.22, -1.42, -0.36, -1.26, -0.96, -0.09, -0.70, -1.56), 10, 2)
 # d <- matrix(c(1.1, 0.2, 0.4, 0.2, -0.5), J, 1)
 for (t in 1:5) {
+  # TODO: rewrite this portion
   # Generate data
   X <- matrix(rnorm(N * K), N, K) # Factor score matrix: N x K #nolint
   prob <- 1 / (1 + exp(-(X %*% t(a))))
@@ -38,6 +39,7 @@ for (t in 1:5) {
   Y <- t(sapply(1:N, function(i) rbinom(n = J, size = 1, prob = prob[i,]))) #nolint
   # Y <- simdata(a = a, d = d, N = N, itemtype = rep("graded", J)) #nolint
   # Y
+  # TODO: rewrite this portion to make it more efficient.
   X_tilde <- matrix(rnorm(M * K), M, K) # M x K
   # head(X_tilde)
   # dim(X_tilde)
