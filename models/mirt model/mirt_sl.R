@@ -2,8 +2,11 @@ library(mirt)
 library(Rlab)
 library(MASS)
 # set.seed(2022)
-l2 <- function(x) {
+mse <- function(x) {
   return(sum(x ^ 2))
+}
+l2 <- function(x) {
+  return(sum(x ^ 2) ^ 0.5)
 }
 Y2Ytilde <- function(Y) {
   Y_tilde <- Y
