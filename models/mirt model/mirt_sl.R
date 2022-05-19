@@ -46,6 +46,7 @@ for (t in 1:5) {
   Y_tilde <- Y2Ytilde(Y) # M x J
   # Y_tilde
   # c(Y_tilde)
+  # TODO: fix bugs
   ld_mat <- matrix(0, M * J, J * K)
   for (j in 1:J) {
     ld_mat[(((j - 1) * M + 1):(j * M)), (((j - 1) * K + 1):(j * K))] <- X_tilde
