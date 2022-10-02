@@ -1,2 +1,4 @@
 # ignore folders
-plots/
+__pycache__/
+.DS_Store
+plots/Rasch_plot/scripts
