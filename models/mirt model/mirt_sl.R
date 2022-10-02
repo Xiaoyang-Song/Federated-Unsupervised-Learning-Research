@@ -30,24 +30,26 @@ Y2Ytilde <- function(Y) {
   return(Y_tilde)
 }
 
-J <- 5
+J <- 10
 K <- 2
-N <- 2000
+N <- 10000
 R <- 100
 M <- N * R
 mc <- 1
 error_surr <- rep(0, 100)
 error_mirt <- rep(0, 100)
 # For now, there is no intercept term involved.
-a <- matrix(c(2.2, 2.0, 2.6, -1.4, -1.2, 0, 0, 0, 3.2, 1.7), J, K) # J x K #nolint
-a
+# a <- matrix(c(2.2, 2.0, 2.6, -1.4, -1.2, 0, 0, 0, 3.2, 1.7), J, K) # J x K #nolint
+# a
 a_2d <- matrix(t(a), byrow = TRUE, nrow = J)
 a_2d
 # fnorm(a)
 # a_est <- matrix(c(2.3, 1.97, 2.44, -1.34, -1.21, 0.0, 0.07, 0.12, 3.10, 1.74), 5, 2)
 # l2(a_est - a)
-# a <- matrix(c(2.20, 2.00, 2.60, 1.60, 1.70, 1.80, 1.80, 1.90, 1.60, 1.70,
-#               0, 0, 0, 0, 0, 1.2, 1.1, 1.2, 2.1, 1.5), 10, 2)
+a <- matrix(c(2.20, 2.00, 2.60, 1.60, 1.70, 1.80, 1.80, 1.90, 1.60, 1.70,
+              0, 0, 0, 0, 0, 1.2, 1.1, 1.2, 2.1, 1.5), 10, 2)
+a
+fnorm(a)
 # d <- matrix(c(0.67, 1.09, -0.18, -0.76, 0.5, -0.41, -0.07, 1.15, 0.13, -1.10,
 #               -0.72, -0.14, -1.22, -1.42, -0.36, -1.26, -0.96, -0.09, -0.70, -1.56), 10, 2)
 # d <- matrix(c(1.1, 0.2, 0.4, 0.2, -0.5), J, 1)
@@ -75,43 +77,45 @@ for (t in 1:mc) {
     ld_mat[(((j - 1) * M + 1):(j * M)), (((j - 1) * K + 1):(j * K))] <- X_tilde
     print(dim(ld_mat[(((j - 1) * M + 1):(j * M)), (((j - 1) * K + 1):(j * K))])) #nolint
   }
+  ld_mat
   # dim(ld_mat)
   # dim(t(Y_tilde))
   # c(t(Y_tilde))
   # c(Y_tilde)
   sl_fit <- glm(c(t(Y_tilde)) ~ ld_mat - 1, family = binomial,
               control = list(maxit = 10000))
-  # coef(sl_fit)
+  coef(sl_fit)
   sl_fit_coef <- matrix(coef(sl_fit))
-  # sl_fit_coef
-  sl_fit_coef_2d <- matrix(sl_fit_coef, nrow = 5, byrow = TRUE)
+  sl_fit_coef
+  sl_fit_coef_2d <- matrix(sl_fit_coef, nrow = 10, byrow = TRUE)
   # sl_fit_coef_2d
   sl_fit_coef_qr <- qr_decomp(t(sl_fit_coef_2d))$R
-  # sl_fit_coef_qr
+  sl_fit_coef_qr
   error_surr[t] <- fnorm(a_2d - sl_fit_coef_qr)
   # fnorm(a_2d - sl_fit_coef_qr)
-  # sinTheta(sl_fit_coef_qr, a_2d)
+  sinTheta(sl_fit_coef_qr, a)
   # error_surr[t]
   values <- mirt(data.frame(Y), 2, itemtype = "graded", method = "MHRM",
                     technical = list(NCYCLES = 10000), pars = "values")
-  # values
+  print(values)
   values[2, 6] <- 0
   values[2, 9] <- FALSE
   for (j in 1:J) {
     values[3 * j, 6] <- 0
     values[3 * j, 9] <- FALSE
   }
-  values[14, 9] <- TRUE
-  dim(Y)
+  values[29, 9] <- TRUE
+  values
+  # dim(Y)
   # print(values)
   mirt_fit <- mirt(data.frame(Y), 2, itemtype = "graded", method = "MHRM", TOL = 0.0001, #nolint
                  technical = list(NCYCLES = 10000), pars = values)
   mirt_fit_coef <- simplify2array(matrix(coef(mirt_fit, simplify = TRUE)$items[, 1:2], nrow = J, ncol = K)) #nolint
   # mirt_fit_coef
   mirt_fit_coef_qr <- qr_decomp(t(mirt_fit_coef))$R
-  # mirt_fit_coef_qr
-  # fnorm(mirt_fit_coef_qr - a)
-  # sinTheta(mirt_fit_coef, a)
+  mirt_fit_coef_qr
+  fnorm(mirt_fit_coef_qr - a)
+  sinTheta(mirt_fit_coef_qr, a)
   error_mirt[t] <- fnorm(mirt_fit_coef_qr - a)
 }
 print("Surrogate Loss MLE:")
@@ -120,5 +124,3 @@ print(sur_ls)
 print("CMIRT:")
 cmirt <- round(error_mirt / mc, 6)
 print(cmirt)
-print(cmirt - sur_ls)
-d_fit2
