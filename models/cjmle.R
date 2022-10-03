@@ -1,7 +1,7 @@
 library(mirt)
 library(mirtjml)
 
-# sin theta distance for two matrix
+# sin theta distance between two matrix
 sin_theta <- function(A1, A2) {
   V1 <- svd(A1)$u
   V2 <- svd(A2)$u
@@ -36,20 +36,47 @@ standardize <- function(A, d, theta) {
   A_tilde <- (A %*% v %*% d) / sqrt(N)
   return(list(d_tilde = d_tilde, theta_tilde = theta_tilde, A_tilde = A_tilde))
 }
+
+theta_norm <- function(theta) {
+  return(apply(theta, 1, function(i) sqrt(sum(matrix(i) ^ 2) + 1)))
+}
+
+d_a_norm <- function(d, A) {
+  # A: J x K
+  # d: J x 1
+  sq_fnorm_a <- apply(A, 1, function(i) sum(matrix(i) ^ 2))
+  return(sqrt(sq_fnorm_a + d ^ 2))
+}
+a <- matrix(1:10)
+a <- sapply(1:3, function(i) a)
+a
+n <- theta_norm(theta)
+n
+
+s <- apply(a, 2, function(i) norm(matrix(i), 'F'))
+s
 #==============================================================================#
 #==============================================================================#
 # set.seed(2022)
+# Simulation study for 2PL model
 N <- 1000
 J <- 10
 K <- 2
 mc <- 5
 A <- matrix(runif((J * K), 1, 2), J, K)
+A
 A[6:10, 2] <- 0
 d <- rnorm(J, -0.5, 0.5)
-D <- t(sapply(1:N, function(i) d))
+d
 
+D <- t(sapply(1:N, function(i) d)) # N x J
+dim(D)
+head(D)
+dd
+dim(dd)
 
 theta <- matrix(rnorm(N * K), N, K)
+head(theta)
 P <- 1 / (1 + exp(-theta %*% t(A) - D))
 
 A0 <- matrix(1, J, K)
