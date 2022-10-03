@@ -47,14 +47,6 @@ d_a_norm <- function(d, A) {
   sq_fnorm_a <- apply(A, 1, function(i) sum(matrix(i) ^ 2))
   return(sqrt(sq_fnorm_a + d ^ 2))
 }
-a <- matrix(1:10)
-a <- sapply(1:3, function(i) a)
-a
-n <- theta_norm(theta)
-n
-
-s <- apply(a, 2, function(i) norm(matrix(i), 'F'))
-s
 #==============================================================================#
 #==============================================================================#
 # set.seed(2022)
@@ -63,21 +55,23 @@ N <- 1000
 J <- 10
 K <- 2
 mc <- 5
+# Generate ground truth
 A <- matrix(runif((J * K), 1, 2), J, K)
-A
 A[6:10, 2] <- 0
-d <- rnorm(J, -0.5, 0.5)
+A # A: J x K
+d <- rnorm(J, -0.5, 0.5) # d: J x 1
 d
-
 D <- t(sapply(1:N, function(i) d)) # N x J
-dim(D)
-head(D)
-dd
-dim(dd)
-
+# Capability parameters: N x K
 theta <- matrix(rnorm(N * K), N, K)
-head(theta)
-P <- 1 / (1 + exp(-theta %*% t(A) - D))
+# Check norm
+C <- sqrt(K) * 5
+sprintf("Default C is %f.", C)
+sprintf("Max norm of Theta is %f.", max(theta_norm(theta)))
+sprintf("Max norm of A is %f.", max(d_a_norm(d, A)))
+
+# Calculate probabilities
+prob <- 1 / (1 + exp(-theta %*% t(A) - D)) # N x J
 
 A0 <- matrix(1, J, K)
 A0[10, 2] <- 0
@@ -88,7 +82,7 @@ Q[10, 2] <- FALSE
 
 cjmle_err <- mhrm_err <- rep(0, mc)
 for (t in 1:mc) {
-  data <- t(sapply(1:N, function(i) rbinom(J, 1, P[i,])))
+  data <- t(sapply(1:N, function(i) rbinom(J, 1, prob[i,])))
   res_jml <- mirtjml_conf(data, Q, theta0, A0, d0, tol = 1e-3, cc = 2)
   cjmle_err[t] <- sin_theta(res_jml$A_hat, A)
   # standard_obj <- standardize(res_jml$A_hat, res_jml$d_hat, res_jml$theta_hat)
