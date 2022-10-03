@@ -41,13 +41,14 @@ plot_fix_J_regime <- function(n) {
     ggtitle("F-Norm vs. Global Sample Size") +
     easy_center_title()
   ggsave("Fix-J[d].png")
-  return(0)
 
+  return(0)
 }
 
 # rds <- readRDS(paste("checkpoint/Fix-J[cc=2][N=2000].rds")
 # a <- mean(rds['cjmle_err_A'])
 # # a
-# N <- c(50, 100, 200, 500, 750, 1000, 2000)
+N <- c(50, 100, 200, 500, 750, 1000, 2000, 3000)
 # N[1]
 plot_fix_J_regime(N)
+

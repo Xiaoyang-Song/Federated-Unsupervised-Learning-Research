@@ -67,30 +67,31 @@ d <- rnorm(J, -0.5, 0.5) # d: J x 1
 # d
 # Check norm
 C <- sqrt(K) * 5
-sprintf("Default C is %f.", C)
-max_theta_norm <- max(theta_norm(theta))
-sprintf("Max norm of Theta is %f.", max_theta_norm)
-max_d_a_norm <- max(d_a_norm(d, A))
-sprintf("Max norm of A is %f.", max_d_a_norm)
-# Save ground truth
-gt_dict <- Dict$new(
-  "A" = A,
-  "d" = d,
-  "J" = J,
-  "K" = K,
-# "theta" = theta,
-  "C" = C,
-  "max_theta_norm" = max_theta_norm,
-  "max_d_a_norm" = max_d_a_norm
-)
-saveRDS(gt_dict, "checkpoint/gt_dict[Fix J]")
 # Fixed J Regime
-N_list <- c(50, 100, 200, 500, 750, 1000, 2000)
+# N_list <- c(50, 100, 200, 500, 750, 1000, 2000)
+N_list <- c(3000)
 
 for (N in N_list) {
   D <- t(sapply(1:N, function(i) d)) # N x J
   # Capability parameters: N x K
   theta <- matrix(rnorm(N * K), N, K)
+  sprintf("Default C is %f.", C)
+  max_theta_norm <- max(theta_norm(theta))
+  sprintf("Max norm of Theta is %f.", max_theta_norm)
+  max_d_a_norm <- max(d_a_norm(d, A))
+  sprintf("Max norm of A is %f.", max_d_a_norm)
+  # Save ground truth
+  gt_dict <- Dict$new(
+  "A" = A,
+  "d" = d,
+  "J" = J,
+  "K" = K,
+  # "theta" = theta,
+  "C" = C,
+  "max_theta_norm" = max_theta_norm,
+  "max_d_a_norm" = max_d_a_norm
+  )
+  saveRDS(gt_dict, paste("checkpoint/gt_dict[Fix J][cc=2][N=", N, "].rds", sep = ""))
   # Ground truth Product N x J
   gt_prod <- theta %*% t(A)
   # Calculate probabilities
