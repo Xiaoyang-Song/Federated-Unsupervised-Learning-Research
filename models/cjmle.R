@@ -65,11 +65,6 @@ A[6:10, 2] <- 0 # Impose constraint as in Cai's paper
 # A # A: J x K
 d <- rnorm(J, -0.5, 0.5) # d: J x 1
 # d
-D <- t(sapply(1:N, function(i) d)) # N x J
-# Capability parameters: N x K
-theta <- matrix(rnorm(N * K), N, K)
-# Ground truth Product N x J
-gt_prod <- theta %*% t(A)
 # Check norm
 C <- sqrt(K) * 5
 sprintf("Default C is %f.", C)
@@ -83,7 +78,7 @@ gt_dict <- Dict$new(
   "d" = d,
   "J" = J,
   "K" = K,
-  "theta" = theta,
+# "theta" = theta,
   "C" = C,
   "max_theta_norm" = max_theta_norm,
   "max_d_a_norm" = max_d_a_norm
@@ -92,18 +87,22 @@ saveRDS(gt_dict, "checkpoint/gt_dict[Fix J]")
 # Fixed J Regime
 N_list <- c(50, 100, 200, 500, 750, 1000, 2000)
 
-# Calculate probabilities
-prob <- 1 / (1 + exp(-theta %*% t(A) - D)) # N x J
-# A0: Initial values of loading matrix
-A0 <- matrix(1, J, K)
-A0[10, 2] <- 0
-# d0: Initial values of intercepts
-d0 <- rep(0, J)
-# Q: Design matrix
-Q <- matrix(TRUE, J, K)
-Q[10, 2] <- FALSE # Impose PLT constraint here
-
 for (N in N_list) {
+  D <- t(sapply(1:N, function(i) d)) # N x J
+  # Capability parameters: N x K
+  theta <- matrix(rnorm(N * K), N, K)
+  # Ground truth Product N x J
+  gt_prod <- theta %*% t(A)
+  # Calculate probabilities
+  prob <- 1 / (1 + exp(-theta %*% t(A) - D)) # N x J
+  # A0: Initial values of loading matrix
+  A0 <- matrix(1, J, K)
+  A0[10, 2] <- 0
+  # d0: Initial values of intercepts
+  d0 <- rep(0, J)
+  # Q: Design matrix
+  Q <- matrix(TRUE, J, K)
+  Q[10, 2] <- FALSE # Impose PLT constraint here
   # theta0: Initial values of capability parameters
   theta0 <- matrix(rnorm(N * K), N, K)
   cjmle_err_A <- cjmle_err_Theta <- cjmle_err_d <- mhrm_err_A <- mhrm_err_d <- rep(0, mc)
