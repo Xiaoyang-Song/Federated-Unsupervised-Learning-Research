@@ -55,7 +55,7 @@ d_a_norm <- function(d, A) {
 #==============================================================================#
 set.seed(2022)
 # Simulation study for 2PL model
-N <- 1000
+N <- 500
 K <- 2
 mc <- 50
 # d
@@ -90,7 +90,7 @@ for (J in J_list) {
   "max_theta_norm" = max_theta_norm,
   "max_d_a_norm" = max_d_a_norm
   )
-  saveRDS(gt_dict, paste("checkpoint/gt_dict[Fix N][cc=2][J", J, "].rds", sep = ""))
+  saveRDS(gt_dict, paste("checkpoint/Fix-N[500]/gt_dict[Fix N][cc=2][J", J, "].rds", sep = ""))
   # Ground truth Product N x J
   gt_prod <- theta %*% t(A)
   # Calculate probabilities
@@ -135,10 +135,17 @@ for (J in J_list) {
     "mhrm_err_d" = mhrm_err_d,
     "N" = N,
     "mc" = mc)
-  saveRDS(result_dict, paste("checkpoint/Fix-N[cc=2][J=", J, "].rds", sep = ""))
+  saveRDS(result_dict, paste("checkpoint/Fix-N[500]/Fix-N[cc=2][J=", J, "].rds", sep = ""))
 }
 # mhrm_err_A
-# ex <- readRDS("checkpoint/Fix-J[N=1000].rds") #nolint
+ex <- readRDS("checkpoint/Fix-N[cc=2][J=30].rds") #nolint
+mean(ex['cjmle_err_A'])
+mean(ex['mhrm_err_A'])
+
+ex1 <- readRDS("checkpoint//Fix-N[cc=2][J=5].rds") #nolint
+mean(ex1['cjmle_err_A'])
+mean(ex1['mhrm_err_A'])
+
 # test <- readRDS("checkpoint/Fix-J[N=500].rds")
 # mean(test['mhrm_err_A'])
 # mean(test['cjmle_err_A'])
