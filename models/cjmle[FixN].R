@@ -55,23 +55,23 @@ d_a_norm <- function(d, A) {
 #==============================================================================#
 set.seed(2022)
 # Simulation study for 2PL model
-# N <- 1000
-J <- 10
+N <- 1000
 K <- 2
 mc <- 50
-# Generate ground truth
-A <- matrix(runif((J * K), 1, 2), J, K)
-A[6:10, 2] <- 0 # Impose constraint as in Cai's paper
-# A # A: J x K
-d <- rnorm(J, -0.5, 0.5) # d: J x 1
 # d
 # Check norm
 C <- sqrt(K) * 5
-# Fixed J Regime
-# N_list <- c(50, 100, 200, 500, 750, 1000, 2000)
-N_list <- c(3000)
+# Fixed N Regime
 
-for (N in N_list) {
+J_list <- c(5, 10, 15, 20, 25, 30)
+
+for (J in J_list) {
+  # Generate ground truth
+  A <- matrix(runif((J * K), 1, 2), J, K)
+  #   A[6:10, 2] <- 0 # Impose constraint as in Cai's paper
+  A[floor((J / 2) + 1):J] <- 0
+  # A # A: J x K
+  d <- rnorm(J, -0.5, 0.5) # d: J x 1
   D <- t(sapply(1:N, function(i) d)) # N x J
   # Capability parameters: N x K
   theta <- matrix(rnorm(N * K), N, K)
@@ -86,29 +86,29 @@ for (N in N_list) {
   "d" = d,
   "J" = J,
   "K" = K,
-  # "theta" = theta,
   "C" = C,
   "max_theta_norm" = max_theta_norm,
   "max_d_a_norm" = max_d_a_norm
   )
-  saveRDS(gt_dict, paste("checkpoint/gt_dict[Fix J][cc=2][N=", N, "].rds", sep = ""))
+  saveRDS(gt_dict, paste("checkpoint/gt_dict[Fix N][cc=2][J", J, "].rds", sep = ""))
   # Ground truth Product N x J
   gt_prod <- theta %*% t(A)
   # Calculate probabilities
   prob <- 1 / (1 + exp(-theta %*% t(A) - D)) # N x J
   # A0: Initial values of loading matrix
   A0 <- matrix(1, J, K)
-  A0[10, 2] <- 0
+  A0[J, 2] <- 0
   # d0: Initial values of intercepts
   d0 <- rep(0, J)
   # Q: Design matrix
   Q <- matrix(TRUE, J, K)
-  Q[10, 2] <- FALSE # Impose PLT constraint here
+  Q[J, 2] <- FALSE # Impose PLT constraint here
   # theta0: Initial values of capability parameters
   theta0 <- matrix(rnorm(N * K), N, K)
+
   cjmle_err_A <- cjmle_err_Theta <- cjmle_err_d <- mhrm_err_A <- mhrm_err_d <- rep(0, mc)
   for (t in 1:mc) {
-    print(sprintf("N = %d | Monte Carlo Simulation #%d.", N, t))
+    print(sprintf("J = %d | Monte Carlo Simulation #%d.", J, t))
     # flush.console()
     # Generate data
     data <- t(sapply(1:N, function(i) rbinom(J, 1, prob[i,])))
@@ -122,8 +122,7 @@ for (N in N_list) {
     # standard_obj$A_tilde
     # sin_theta(standard_obj$A_tilde, A)
     # standard_obj$theta_tilde
-    colnames(data) <- c("Item_1", "Item_2", "Item_3", "Item_4", "Item_5",
-                    "Item_6", "Item_7", "Item_8", "Item_9", "Item_10")
+    colnames(data) <- sapply(1:J, function(i) paste("Item_", i, sep = ""))
     res_mml <- mirt_coef(data, K)
     mhrm_err_A[t] <- sin_theta(res_mml$slope, A)
     mhrm_err_d[t] <- norm(matrix(d - res_mml$intcp), 'F')
@@ -136,9 +135,15 @@ for (N in N_list) {
     "mhrm_err_d" = mhrm_err_d,
     "N" = N,
     "mc" = mc)
-  saveRDS(result_dict, paste("checkpoint/Fix-J[cc=2][N=", N, "].rds", sep = ""))
+  saveRDS(result_dict, paste("checkpoint/Fix-N[cc=2][J=", J, "].rds", sep = ""))
 }
+# mhrm_err_A
 # ex <- readRDS("checkpoint/Fix-J[N=1000].rds") #nolint
 # test <- readRDS("checkpoint/Fix-J[N=500].rds")
 # mean(test['mhrm_err_A'])
 # mean(test['cjmle_err_A'])
+
+# c("Item_1", "Item_2", "Item_3", "Item_4", "Item_5",
+#                     "Item_6", "Item_7", "Item_8", "Item_9", "Item_10")
+# col <- sapply(1:J, function(i) paste("Item_", i, sep = ""))
+# col
