@@ -112,7 +112,7 @@ for (N in N_list) {
     # Generate data
     data <- t(sapply(1:N, function(i) rbinom(J, 1, prob[i,])))
     # Start estimation
-    res_jml <- mirtjml_conf(data, Q, theta0, A0, d0, tol = 1e-3, cc = 4)
+    res_jml <- mirtjml_conf(data, Q, theta0, A0, d0, tol = 1e-3, cc = 2)
     cjmle_err_A[t] <- sin_theta(res_jml$A_hat, A)
     cjmle_err_Theta[t] <- sin_theta(res_jml$theta_hat, theta)
     cjmle_err_d[t] <- norm(matrix(d - res_jml$d_hat), 'F')
@@ -135,6 +135,9 @@ for (N in N_list) {
     "mhrm_err_d" = mhrm_err_d,
     "N" = N,
     "mc" = mc)
-  saveRDS(result_dict, paste("checkpoint/Fix-J[N=", N, "].rds", sep = ""))
+  saveRDS(result_dict, paste("checkpoint/Fix-J[cc=2][N=", N, "].rds", sep = ""))
 }
 # ex <- readRDS("checkpoint/Fix-J[N=1000].rds") #nolint
+# test <- readRDS("checkpoint/Fix-J[N=500].rds")
+# mean(test['mhrm_err_A'])
+# mean(test['cjmle_err_A'])
