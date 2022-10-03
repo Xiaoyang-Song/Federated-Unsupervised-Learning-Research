@@ -88,12 +88,8 @@ plot_fix_N_regime <- function(j) {
 
   return(0)
 }
-
-# rds <- readRDS(paste("checkpoint/Fix-J[cc=2][N=2000].rds")
-# a <- mean(rds['cjmle_err_A'])
-# # a
+ 
 N <- c(50, 100, 200, 500, 750, 1000, 2000, 3000)
-# N[1]
 J <- c(5, 10, 15, 20, 25, 30) 
 plot_fix_J_regime(N)
 plot_fix_N_regime(J)
