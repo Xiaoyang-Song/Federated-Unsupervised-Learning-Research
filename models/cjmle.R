@@ -139,5 +139,3 @@ for (N in N_list) {
   saveRDS(result_dict, paste("checkpoint/Fix-J[N=", N, "].rds", sep = ""))
 }
 # ex <- readRDS("checkpoint/Fix-J[N=1000].rds") #nolint
-
-
