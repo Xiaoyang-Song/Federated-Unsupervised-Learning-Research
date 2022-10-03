@@ -24,8 +24,8 @@ mirt_coef <- function(data, K) {
     est_slope[j,] <- coef(fit)[[j]][1:K]
     est_intcp[j] <- coef(fit)[[j]][(K + 1)]
   }
-
-  return(list(slope = est_slope, intcp = est_intcp))
+  fscores <- fscores(fit, full.scores = TRUE)
+  return(list(slope = est_slope, intcp = est_intcp, theta = fscores))
 }
 
 standardize <- function(A, d, theta) {
@@ -106,7 +106,8 @@ for (J in J_list) {
   # theta0: Initial values of capability parameters
   theta0 <- matrix(rnorm(N * K), N, K)
 
-  cjmle_err_A <- cjmle_err_Theta <- cjmle_err_d <- mhrm_err_A <- mhrm_err_d <- rep(0, mc)
+  cjmle_err_A <- cjmle_err_Theta <- cjmle_err_d <- cjmle_err_prod <- rep(0, mc)
+  mhrm_err_A <- mhrm_err_Theta <- mhrm_err_d <- mhrm_err_prod <- rep(0, mc)
   for (t in 1:mc) {
     print(sprintf("J = %d | Monte Carlo Simulation #%d.", J, t))
     # flush.console()
@@ -116,6 +117,7 @@ for (J in J_list) {
     res_jml <- mirtjml_conf(data, Q, theta0, A0, d0, tol = 1e-3, cc = 2)
     cjmle_err_A[t] <- sin_theta(res_jml$A_hat, A)
     cjmle_err_Theta[t] <- sin_theta(res_jml$theta_hat, theta)
+    cjmle_err_prod[t] <- sin_theta(gt_prod, res_jml$theta_hat %*% t(res_jml$A_hat))
     cjmle_err_d[t] <- norm(matrix(d - res_jml$d_hat), 'F')
     # No standardization needed
     # standard_obj <- standardize(res_jml$A_hat, res_jml$d_hat, res_jml$theta_hat)
@@ -125,14 +127,19 @@ for (J in J_list) {
     colnames(data) <- sapply(1:J, function(i) paste("Item_", i, sep = ""))
     res_mml <- mirt_coef(data, K)
     mhrm_err_A[t] <- sin_theta(res_mml$slope, A)
+    mhrm_err_Theta[t] <- sin_theta(res_mml$theta, theta)
+    mhrm_err_prod[t] <- sin_theta(gt_prod, res_mml$theta %*% t(res_mml$slope))
     mhrm_err_d[t] <- norm(matrix(d - res_mml$intcp), 'F')
   }
   result_dict <- Dict$new(
     "cjmle_err_theta" = cjmle_err_Theta,
     "cjmle_err_A" = cjmle_err_A,
     "cjmle_err_d" = cjmle_err_d,
+    "cjmle_err_prod" = cjmle_err_prod,
     "mhrm_err_A" = mhrm_err_A,
     "mhrm_err_d" = mhrm_err_d,
+    "mhrm_err_theta" = mhrm_err_Theta,
+    "mhrm_err_prod" = mhrm_err_prod,
     "N" = N,
     "mc" = mc)
   saveRDS(result_dict, paste("checkpoint/Fix-N[500]/Fix-N[cc=2][J=", J, "].rds", sep = ""))

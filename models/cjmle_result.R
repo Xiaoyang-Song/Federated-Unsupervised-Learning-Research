@@ -51,7 +51,7 @@ plot_fix_N_regime <- function(j) {
   # Extract data from existing .rds data
   for (idx in 1:len_j) {
     # print(n[idx])
-    rds <- readRDS(paste("checkpoint/Fix-N[cc=2][J=", j[idx], "].rds", sep = ""))
+    rds <- readRDS(paste("checkpoint/Fix-N[500]/Fix-N[cc=2][J=", j[idx], "].rds", sep = ""))
     cjmle_A[idx] <- mean(rds["cjmle_err_A"])
     cjmle_d[idx] <- mean(rds["cjmle_err_d"])
     cjmle_theta[idx] <- mean(rds["cjmle_err_theta"])
@@ -71,7 +71,7 @@ plot_fix_N_regime <- function(j) {
     labs(x = "Number of Items", y = "SinTheta Distances") +
     ggtitle("SinTheta Distance vs. Number of Items") +
     easy_center_title()
-  ggsave("Fix-N[A].png")
+  ggsave("Fix-N[500][A].png")
 
   # Plot cjmle & mirt intercept estimator
   ggplot(NULL, aes(x = j)) +
@@ -84,7 +84,7 @@ plot_fix_N_regime <- function(j) {
     labs(x = "Number of Items", y = "FNorm") +
     ggtitle("F-Norm vs. Number of Items") +
     easy_center_title()
-  ggsave("Fix-N[d].png")
+  ggsave("Fix-N[500][d].png")
 
   return(0)
 }

@@ -24,8 +24,8 @@ mirt_coef <- function(data, K) {
     est_slope[j,] <- coef(fit)[[j]][1:K]
     est_intcp[j] <- coef(fit)[[j]][(K + 1)]
   }
-
-  return(list(slope = est_slope, intcp = est_intcp))
+  fscores <- fscores(fit, full.scores = TRUE)
+  return(list(slope = est_slope, intcp = est_intcp, theta = fscores))
 }
 
 standardize <- function(A, d, theta) {
@@ -68,8 +68,8 @@ d <- rnorm(J, -0.5, 0.5) # d: J x 1
 # Check norm
 C <- sqrt(K) * 5
 # Fixed J Regime
-# N_list <- c(50, 100, 200, 500, 750, 1000, 2000)
-N_list <- c(3000)
+N_list <- c(50, 100, 200, 500, 750, 1000, 1500, 2000, 2500)
+# N_list <- c(3000)
 
 for (N in N_list) {
   D <- t(sapply(1:N, function(i) d)) # N x J
@@ -91,7 +91,7 @@ for (N in N_list) {
   "max_theta_norm" = max_theta_norm,
   "max_d_a_norm" = max_d_a_norm
   )
-  saveRDS(gt_dict, paste("checkpoint/gt_dict[Fix J][cc=2][N=", N, "].rds", sep = ""))
+  saveRDS(gt_dict, paste("checkpoint/Fix-J[10][Prod]/gt_dict[Fix J][cc=2][N=", N, "].rds", sep = ""))
   # Ground truth Product N x J
   gt_prod <- theta %*% t(A)
   # Calculate probabilities
@@ -106,7 +106,8 @@ for (N in N_list) {
   Q[10, 2] <- FALSE # Impose PLT constraint here
   # theta0: Initial values of capability parameters
   theta0 <- matrix(rnorm(N * K), N, K)
-  cjmle_err_A <- cjmle_err_Theta <- cjmle_err_d <- mhrm_err_A <- mhrm_err_d <- rep(0, mc)
+  cjmle_err_A <- cjmle_err_Theta <- cjmle_err_d <- cjmle_err_prod <- rep(0, mc)
+  mhrm_err_A <- mhrm_err_Theta <- mhrm_err_d <- mhrm_err_prod <- rep(0, mc)
   for (t in 1:mc) {
     print(sprintf("N = %d | Monte Carlo Simulation #%d.", N, t))
     # flush.console()
@@ -116,6 +117,7 @@ for (N in N_list) {
     res_jml <- mirtjml_conf(data, Q, theta0, A0, d0, tol = 1e-3, cc = 2)
     cjmle_err_A[t] <- sin_theta(res_jml$A_hat, A)
     cjmle_err_Theta[t] <- sin_theta(res_jml$theta_hat, theta)
+    cjmle_err_prod[t] <- sin_theta(gt_prod, res_jml$theta_hat %*% t(res_jml$A_hat))
     cjmle_err_d[t] <- norm(matrix(d - res_jml$d_hat), 'F')
     # No standardization needed
     # standard_obj <- standardize(res_jml$A_hat, res_jml$d_hat, res_jml$theta_hat)
@@ -126,17 +128,22 @@ for (N in N_list) {
                     "Item_6", "Item_7", "Item_8", "Item_9", "Item_10")
     res_mml <- mirt_coef(data, K)
     mhrm_err_A[t] <- sin_theta(res_mml$slope, A)
+    mhrm_err_Theta[t] <- sin_theta(res_mml$theta, theta)
+    mhrm_err_prod[t] <- sin_theta(gt_prod, res_mml$theta %*% t(res_mml$slope))
     mhrm_err_d[t] <- norm(matrix(d - res_mml$intcp), 'F')
   }
   result_dict <- Dict$new(
     "cjmle_err_theta" = cjmle_err_Theta,
     "cjmle_err_A" = cjmle_err_A,
     "cjmle_err_d" = cjmle_err_d,
+    "cjmle_err_prod" = cjmle_err_prod,
     "mhrm_err_A" = mhrm_err_A,
     "mhrm_err_d" = mhrm_err_d,
+    "mhrm_err_theta" = mhrm_err_Theta,
+    "mhrm_err_prod" = mhrm_err_prod,
     "N" = N,
     "mc" = mc)
-  saveRDS(result_dict, paste("checkpoint/Fix-J[cc=2][N=", N, "].rds", sep = ""))
+  saveRDS(result_dict, paste("checkpoint/Fix-J[10][Prod]/Fix-J[cc=2][N=", N, "].rds", sep = ""))
 }
 # ex <- readRDS("checkpoint/Fix-J[N=1000].rds") #nolint
 # test <- readRDS("checkpoint/Fix-J[N=500].rds")
