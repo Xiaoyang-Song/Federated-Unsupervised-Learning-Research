@@ -119,7 +119,7 @@ for (J in J_list) {
     cjmle_err_A[t] <- sin_theta(res_jml$A_hat, A)
     cjmle_err_Theta[t] <- sin_theta(res_jml$theta_hat, theta)
     cjmle_err_prod[t] <- sin_theta(gt_prod, res_jml$theta_hat %*% t(res_jml$A_hat))
-    cjmle_err_prod_f[t] <- norm(gt_prod - res_jml$theta_hat %*% t(res_jml$A_hat), 'F') / (N * J)
+    cjmle_err_prod_f[t] <- norm(gt_prod - res_jml$theta_hat %*% t(res_jml$A_hat), 'F') / sqrt(N * J)
     cjmle_err_d[t] <- norm(matrix(d - res_jml$d_hat), 'F')
     # No standardization needed
     # standard_obj <- standardize(res_jml$A_hat, res_jml$d_hat, res_jml$theta_hat)
@@ -131,7 +131,7 @@ for (J in J_list) {
     mhrm_err_A[t] <- sin_theta(res_mml$slope, A)
     mhrm_err_Theta[t] <- sin_theta(res_mml$theta, theta)
     mhrm_err_prod[t] <- sin_theta(gt_prod, res_mml$theta %*% t(res_mml$slope))
-    mhrm_err_prod_f[t] <- norm(gt_prod - res_mml$theta %*% t(res_mml$slope), 'F') / (N * J)
+    mhrm_err_prod_f[t] <- norm(gt_prod - res_mml$theta %*% t(res_mml$slope), 'F') / sqrt(N * J)
     mhrm_err_d[t] <- norm(matrix(d - res_mml$intcp), 'F')
   }
   result_dict <- Dict$new(

@@ -58,7 +58,7 @@ set.seed(2022)
 # N <- 1000
 J <- 10
 K <- 2
-mc <- 50
+mc <- 25
 # Generate ground truth
 A <- matrix(runif((J * K), 0.5, 1.5), J, K)
 A[6:10, 2] <- 0 # Impose constraint as in Cai's paper
@@ -91,7 +91,7 @@ for (N in N_list) {
   "max_theta_norm" = max_theta_norm,
   "max_d_a_norm" = max_d_a_norm
   )
-  saveRDS(gt_dict, paste("checkpoint/Fix-J[1000]/gt_dict[Fix J][cc=2][N=", N, "].rds", sep = ""))
+  saveRDS(gt_dict, paste("checkpoint/Fix-J[1000][sqrt]/gt_dict[Fix J][cc=2][N=", N, "].rds", sep = ""))
   # Ground truth Product N x J
   gt_prod <- theta %*% t(A)
   # Calculate probabilities
@@ -117,9 +117,9 @@ for (N in N_list) {
     # Start estimation
     res_jml <- mirtjml_conf(data, Q, theta0, A0, d0, tol = 1e-3, cc = 2)
     cjmle_err_A[t] <- sin_theta(res_jml$A_hat, A)
-    cjmle_err_Theta[t] <- sin_theta(res_jml$theta_hat, theta)
-    cjmle_err_prod[t] <- sin_theta(gt_prod, res_jml$theta_hat %*% t(res_jml$A_hat))
-    cjmle_err_prod_f[t] <- norm(gt_prod - res_jml$theta_hat %*% t(res_jml$A_hat), 'F') / (N * J)
+    cjmle_err_Theta[t] <- sin_theta(t(res_jml$theta_hat), t(theta))
+    cjmle_err_prod[t] <- sin_theta(t(gt_prod), t(res_jml$theta_hat %*% t(res_jml$A_hat)))
+    cjmle_err_prod_f[t] <- norm(gt_prod - res_jml$theta_hat %*% t(res_jml$A_hat), 'F') / sqrt(N * J)
     cjmle_err_d[t] <- norm(matrix(d - res_jml$d_hat), 'F')
     # No standardization needed
     # standard_obj <- standardize(res_jml$A_hat, res_jml$d_hat, res_jml$theta_hat)
@@ -130,9 +130,11 @@ for (N in N_list) {
                     "Item_6", "Item_7", "Item_8", "Item_9", "Item_10")
     res_mml <- mirt_coef(data, K)
     mhrm_err_A[t] <- sin_theta(res_mml$slope, A)
-    mhrm_err_Theta[t] <- sin_theta(res_mml$theta, theta)
-    mhrm_err_prod[t] <- sin_theta(gt_prod, res_mml$theta %*% t(res_mml$slope))
-    mhrm_err_prod_f[t] <- norm(gt_prod - res_mml$theta %*% t(res_mml$slope), 'F') / (N * J)
+    mhrm_err_Theta[t] <- sin_theta(t(res_mml$theta), t(theta))
+    mhrm_err_prod[t] <- sin_theta(t(gt_prod), t(res_mml$theta %*% t(res_mml$slope)))
+    # sin_theta(gt_prod, res_mml$theta %*% t(res_mml$slope))
+    # sin_theta(t(gt_prod), t(res_mml$theta %*% t(res_mml$slope)))
+    mhrm_err_prod_f[t] <- norm(gt_prod - res_mml$theta %*% t(res_mml$slope), 'F') / sqrt(N * J)
     # dim(res_mml$theta %*% t(res_mml$slope))
     # dim(gt_prod)
     # v <- svd(gt_prod)$u
@@ -155,9 +157,11 @@ for (N in N_list) {
     "mhrm_err_prod_f" = mhrm_err_prod_f,
     "N" = N,
     "mc" = mc)
-  saveRDS(result_dict, paste("checkpoint/Fix-J[1000]/Fix-J[cc=2][N=", N, "].rds", sep = ""))
+  saveRDS(result_dict, paste("checkpoint/Fix-J[1000][sqrt]/Fix-J[cc=2][N=", N, "].rds", sep = ""))
 }
-# ex <- readRDS("checkpoint/Fix-J[N=1000].rds") #nolint
+# ex <- readRDS("checkpoint/Fix-J[1000][sqrt]/gt_dict[Fix J][cc=2][N=2500].rds") #nolint
+# norm(ex['theta'] %*% t(ex['A']), 'F') / sqrt(2500*10)
+
 # test <- readRDS("checkpoint/Fix-J[N=500].rds")
 # mean(test['mhrm_err_A'])
 # mean(test['cjmle_err_A'])
