@@ -130,6 +130,13 @@ for (N in N_list) {
     mhrm_err_A[t] <- sin_theta(res_mml$slope, A)
     mhrm_err_Theta[t] <- sin_theta(res_mml$theta, theta)
     mhrm_err_prod[t] <- sin_theta(gt_prod, res_mml$theta %*% t(res_mml$slope))
+    # dim(res_mml$theta %*% t(res_mml$slope))
+    # dim(gt_prod)
+    # v <- svd(gt_prod)$u
+    # dim(v)
+    # norm(gt_prod - res_mml$theta %*% t(res_mml$slope), 'F')
+    # res_mml$theta %*% t(res_mml$slope)
+    # mhrm_err_prod
     mhrm_err_d[t] <- norm(matrix(d - res_mml$intcp), 'F')
   }
   result_dict <- Dict$new(

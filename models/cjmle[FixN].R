@@ -55,7 +55,7 @@ d_a_norm <- function(d, A) {
 #==============================================================================#
 set.seed(2022)
 # Simulation study for 2PL model
-N <- 500
+N <- 1000
 K <- 2
 mc <- 50
 # d
@@ -68,7 +68,7 @@ J_list <- c(5, 10, 15, 20, 25, 30)
 for (J in J_list) {
   # Generate ground truth
   A <- matrix(runif((J * K), 1, 2), J, K)
-  #   A[6:10, 2] <- 0 # Impose constraint as in Cai's paper
+  # A[6:10, 2] <- 0 # Impose constraint as in Cai's paper
   A[floor((J / 2) + 1):J] <- 0
   # A # A: J x K
   d <- rnorm(J, -0.5, 0.5) # d: J x 1
@@ -90,7 +90,7 @@ for (J in J_list) {
   "max_theta_norm" = max_theta_norm,
   "max_d_a_norm" = max_d_a_norm
   )
-  saveRDS(gt_dict, paste("checkpoint/Fix-N[500]/gt_dict[Fix N][cc=2][J", J, "].rds", sep = ""))
+  saveRDS(gt_dict, paste("checkpoint/Fix-N[1000][Prod]/gt_dict[Fix N][cc=2][J", J, "].rds", sep = ""))
   # Ground truth Product N x J
   gt_prod <- theta %*% t(A)
   # Calculate probabilities
@@ -142,16 +142,16 @@ for (J in J_list) {
     "mhrm_err_prod" = mhrm_err_prod,
     "N" = N,
     "mc" = mc)
-  saveRDS(result_dict, paste("checkpoint/Fix-N[500]/Fix-N[cc=2][J=", J, "].rds", sep = ""))
+  saveRDS(result_dict, paste("checkpoint/Fix-N[1000][Prod]/Fix-N[cc=2][J=", J, "].rds", sep = ""))
 }
 # mhrm_err_A
-ex <- readRDS("checkpoint/Fix-N[cc=2][J=30].rds") #nolint
-mean(ex['cjmle_err_A'])
-mean(ex['mhrm_err_A'])
+# ex <- readRDS("checkpoint/Fix-N[cc=2][J=30].rds") #nolint
+# mean(ex['cjmle_err_A'])
+# mean(ex['mhrm_err_A'])
 
-ex1 <- readRDS("checkpoint//Fix-N[cc=2][J=5].rds") #nolint
-mean(ex1['cjmle_err_A'])
-mean(ex1['mhrm_err_A'])
+# ex1 <- readRDS("checkpoint//Fix-N[cc=2][J=5].rds") #nolint
+# mean(ex1['cjmle_err_A'])
+# mean(ex1['mhrm_err_A'])
 
 # test <- readRDS("checkpoint/Fix-J[N=500].rds")
 # mean(test['mhrm_err_A'])
