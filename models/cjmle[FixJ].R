@@ -60,7 +60,7 @@ J <- 10
 K <- 2
 mc <- 50
 # Generate ground truth
-A <- matrix(runif((J * K), 1, 2), J, K)
+A <- matrix(runif((J * K), 0.5, 1.5), J, K)
 A[6:10, 2] <- 0 # Impose constraint as in Cai's paper
 # A # A: J x K
 d <- rnorm(J, -0.5, 0.5) # d: J x 1
@@ -74,6 +74,7 @@ N_list <- c(50, 100, 200, 500, 750, 1000, 1500, 2000, 2500)
 for (N in N_list) {
   D <- t(sapply(1:N, function(i) d)) # N x J
   # Capability parameters: N x K
+  N <- 100
   theta <- matrix(rnorm(N * K), N, K)
   sprintf("Default C is %f.", C)
   max_theta_norm <- max(theta_norm(theta))
