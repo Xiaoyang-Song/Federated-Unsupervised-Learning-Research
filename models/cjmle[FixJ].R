@@ -74,7 +74,6 @@ N_list <- c(50, 100, 200, 500, 750, 1000, 1500, 2000, 2500)
 for (N in N_list) {
   D <- t(sapply(1:N, function(i) d)) # N x J
   # Capability parameters: N x K
-  N <- 100
   theta <- matrix(rnorm(N * K), N, K)
   sprintf("Default C is %f.", C)
   max_theta_norm <- max(theta_norm(theta))
@@ -87,12 +86,12 @@ for (N in N_list) {
   "d" = d,
   "J" = J,
   "K" = K,
-  # "theta" = theta,
+  "theta" = theta,
   "C" = C,
   "max_theta_norm" = max_theta_norm,
   "max_d_a_norm" = max_d_a_norm
   )
-  saveRDS(gt_dict, paste("checkpoint/Fix-J[10][Prod]/gt_dict[Fix J][cc=2][N=", N, "].rds", sep = ""))
+  saveRDS(gt_dict, paste("checkpoint/Fix-J[1000]/gt_dict[Fix J][cc=2][N=", N, "].rds", sep = ""))
   # Ground truth Product N x J
   gt_prod <- theta %*% t(A)
   # Calculate probabilities
@@ -109,6 +108,7 @@ for (N in N_list) {
   theta0 <- matrix(rnorm(N * K), N, K)
   cjmle_err_A <- cjmle_err_Theta <- cjmle_err_d <- cjmle_err_prod <- rep(0, mc)
   mhrm_err_A <- mhrm_err_Theta <- mhrm_err_d <- mhrm_err_prod <- rep(0, mc)
+  mhrm_err_prod_f <- cjmle_err_prod_f <- rep(0, mc)
   for (t in 1:mc) {
     print(sprintf("N = %d | Monte Carlo Simulation #%d.", N, t))
     # flush.console()
@@ -119,6 +119,7 @@ for (N in N_list) {
     cjmle_err_A[t] <- sin_theta(res_jml$A_hat, A)
     cjmle_err_Theta[t] <- sin_theta(res_jml$theta_hat, theta)
     cjmle_err_prod[t] <- sin_theta(gt_prod, res_jml$theta_hat %*% t(res_jml$A_hat))
+    cjmle_err_prod_f[t] <- norm(gt_prod - res_jml$theta_hat %*% t(res_jml$A_hat), 'F') / (N * J)
     cjmle_err_d[t] <- norm(matrix(d - res_jml$d_hat), 'F')
     # No standardization needed
     # standard_obj <- standardize(res_jml$A_hat, res_jml$d_hat, res_jml$theta_hat)
@@ -131,6 +132,7 @@ for (N in N_list) {
     mhrm_err_A[t] <- sin_theta(res_mml$slope, A)
     mhrm_err_Theta[t] <- sin_theta(res_mml$theta, theta)
     mhrm_err_prod[t] <- sin_theta(gt_prod, res_mml$theta %*% t(res_mml$slope))
+    mhrm_err_prod_f[t] <- norm(gt_prod - res_mml$theta %*% t(res_mml$slope), 'F') / (N * J)
     # dim(res_mml$theta %*% t(res_mml$slope))
     # dim(gt_prod)
     # v <- svd(gt_prod)$u
@@ -145,13 +147,15 @@ for (N in N_list) {
     "cjmle_err_A" = cjmle_err_A,
     "cjmle_err_d" = cjmle_err_d,
     "cjmle_err_prod" = cjmle_err_prod,
+    "cjmle_err_prod_f" = cjmle_err_prod_f,
     "mhrm_err_A" = mhrm_err_A,
     "mhrm_err_d" = mhrm_err_d,
     "mhrm_err_theta" = mhrm_err_Theta,
     "mhrm_err_prod" = mhrm_err_prod,
+    "mhrm_err_prod_f" = mhrm_err_prod_f,
     "N" = N,
     "mc" = mc)
-  saveRDS(result_dict, paste("checkpoint/Fix-J[10][Prod]/Fix-J[cc=2][N=", N, "].rds", sep = ""))
+  saveRDS(result_dict, paste("checkpoint/Fix-J[1000]/Fix-J[cc=2][N=", N, "].rds", sep = ""))
 }
 # ex <- readRDS("checkpoint/Fix-J[N=1000].rds") #nolint
 # test <- readRDS("checkpoint/Fix-J[N=500].rds")
