@@ -117,6 +117,7 @@ for (N in N_list) {
     # Start estimation
     res_jml <- mirtjml_conf(data, Q, theta0, A0, d0, tol = 1e-3, cc = 2)
     cjmle_err_A[t] <- sin_theta(res_jml$A_hat, A)
+
     cjmle_err_Theta[t] <- sin_theta(t(res_jml$theta_hat), t(theta))
     cjmle_err_prod[t] <- sin_theta(t(gt_prod), t(res_jml$theta_hat %*% t(res_jml$A_hat)))
     cjmle_err_prod_f[t] <- norm(gt_prod - res_jml$theta_hat %*% t(res_jml$A_hat), 'F') / sqrt(N * J)
@@ -124,10 +125,20 @@ for (N in N_list) {
     # No standardization needed
     # standard_obj <- standardize(res_jml$A_hat, res_jml$d_hat, res_jml$theta_hat)
     # standard_obj$A_tilde
+    # standard_obj$theta_tilde
+    # dim(standard_obj$theta_tilde %*% t(standard_obj$A_tilde))
+    # dim(gt_prod)
+    # dim(gt_prod -standard_obj$theta_tilde %*% t(standard_obj$A_tilde))
+    # norm()
+    # sqrt(N * J)
+    # N <- 2500
+    # norm(gt_prod - res_jml$theta_hat %*% t(res_jml$A_hat), 'F') / sqrt(N * J)
+    # norm(gt_prod -standard_obj$theta_tilde %*% t(standard_obj$A_tilde), 'F') / sqrt(N * J)
     # sin_theta(standard_obj$A_tilde, A)
     # standard_obj$theta_tilde
     colnames(data) <- c("Item_1", "Item_2", "Item_3", "Item_4", "Item_5",
                     "Item_6", "Item_7", "Item_8", "Item_9", "Item_10")
+
     res_mml <- mirt_coef(data, K)
     mhrm_err_A[t] <- sin_theta(res_mml$slope, A)
     mhrm_err_Theta[t] <- sin_theta(t(res_mml$theta), t(theta))
@@ -159,8 +170,8 @@ for (N in N_list) {
     "mc" = mc)
   saveRDS(result_dict, paste("checkpoint/Fix-J[1000][sqrt]/Fix-J[cc=2][N=", N, "].rds", sep = ""))
 }
-# ex <- readRDS("checkpoint/Fix-J[1000][sqrt]/gt_dict[Fix J][cc=2][N=2500].rds") #nolint
-# norm(ex['theta'] %*% t(ex['A']), 'F') / sqrt(2500*10)
+ex <- readRDS("checkpoint/Fix-J[1000][sqrt]/gt_dict[Fix J][cc=2][N=50].rds") #nolint
+norm(ex['theta'] %*% t(ex['A']), 'F')
 
 # test <- readRDS("checkpoint/Fix-J[N=500].rds")
 # mean(test['mhrm_err_A'])
